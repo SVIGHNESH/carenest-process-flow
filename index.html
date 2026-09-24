@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Process Flow - CareNest Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --nh:265; --nc:0.006; --ah:258; --ac:0.185; --al:0.560;
+  --canvas:oklch(0.988 calc(var(--nc)*0.4) var(--nh));
+  --surface:oklch(1 0 var(--nh));
+  --surface-sunken:oklch(0.970 calc(var(--nc)*1.0) var(--nh));
+  --surface-hover:oklch(0.962 calc(var(--nc)*1.2) var(--nh));
+  --border:oklch(0.918 calc(var(--nc)*1.4) var(--nh));
+  --border-strong:oklch(0.846 calc(var(--nc)*1.6) var(--nh));
+  --fg:oklch(0.205 calc(var(--nc)*3.0) var(--nh));
+  --fg-secondary:oklch(0.400 calc(var(--nc)*2.6) var(--nh));
+  --fg-muted:oklch(0.546 calc(var(--nc)*2.2) var(--nh));
+  --fg-subtle:oklch(0.668 calc(var(--nc)*1.8) var(--nh));
+  --accent:oklch(var(--al) var(--ac) var(--ah));
+  --accent-hover:oklch(calc(var(--al) - 0.06) var(--ac) var(--ah));
+  --accent-fg:oklch(1 0 0);
+  --accent-soft:oklch(0.960 calc(var(--ac)*0.22) var(--ah));
+  --accent-text:oklch(calc(var(--al) - 0.06) var(--ac) var(--ah));
+  --ring:oklch(var(--al) var(--ac) var(--ah) / 0.40);
+  --success:oklch(0.545 0.130 152); --success-soft:oklch(0.958 0.032 152);
+  --info:oklch(0.545 0.130 235); --info-soft:oklch(0.958 0.030 235);
+  --warning:oklch(0.590 0.125 72); --warning-soft:oklch(0.960 0.038 72);
+  --special:oklch(0.545 0.150 295); --special-soft:oklch(0.960 0.032 295);
+  --danger:oklch(0.550 0.180 22); --danger-soft:oklch(0.958 0.035 22);
+  --shadow-popover:0 4px 12px oklch(0.2 0.02 var(--nh) / 0.10), 0 1px 2px oklch(0.2 0.02 var(--nh) / 0.06);
+  --shadow-modal:0 16px 48px oklch(0.2 0.02 var(--nh) / 0.16), 0 2px 8px oklch(0.2 0.02 var(--nh) / 0.06);
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+}
+.dark{
+  --canvas:oklch(0.145 calc(var(--nc)*1.0) var(--nh));
+  --surface:oklch(0.180 calc(var(--nc)*1.1) var(--nh));
+  --surface-sunken:oklch(0.212 calc(var(--nc)*1.2) var(--nh));
+  --surface-hover:oklch(0.228 calc(var(--nc)*1.3) var(--nh));
+  --border:oklch(0.262 calc(var(--nc)*1.5) var(--nh));
+  --border-strong:oklch(0.342 calc(var(--nc)*1.6) var(--nh));
+  --fg:oklch(0.968 calc(var(--nc)*0.6) var(--nh));
+  --fg-secondary:oklch(0.800 calc(var(--nc)*1.4) var(--nh));
+  --fg-muted:oklch(0.640 calc(var(--nc)*1.8) var(--nh));
+  --fg-subtle:oklch(0.505 calc(var(--nc)*2.0) var(--nh));
+  --accent:oklch(0.620 var(--ac) var(--ah));
+  --accent-hover:oklch(0.678 var(--ac) var(--ah));
+  --accent-fg:oklch(0.145 0.01 var(--ah));
+  --accent-soft:oklch(0.290 calc(var(--ac)*0.42) var(--ah));
+  --accent-text:oklch(0.760 calc(var(--ac)*0.72) var(--ah));
+  --ring:oklch(0.620 var(--ac) var(--ah) / 0.55);
+  --success:oklch(0.760 0.145 152); --success-soft:oklch(0.290 0.050 152);
+  --info:oklch(0.750 0.115 235); --info-soft:oklch(0.292 0.048 235);
+  --warning:oklch(0.800 0.135 72); --warning-soft:oklch(0.298 0.050 72);
+  --special:oklch(0.760 0.130 295); --special-soft:oklch(0.295 0.055 295);
+  --danger:oklch(0.700 0.170 22); --danger-soft:oklch(0.295 0.065 22);
+  --shadow-popover:0 4px 12px oklch(0 0 0 / 0.45), 0 1px 2px oklch(0 0 0 / 0.30);
+  --shadow-modal:0 16px 48px oklch(0 0 0 / 0.60), 0 2px 8px oklch(0 0 0 / 0.35);
+}
+*{box-sizing:border-box}
+html{color-scheme:light}
+html.dark{color-scheme:dark}
+body{margin:0;background:var(--canvas);color:var(--fg);font-family:'Inter',system-ui,sans-serif;font-size:13px;line-height:20px;-webkit-font-smoothing:antialiased}
+button:not(:disabled){cursor:pointer}
+::selection{background:var(--accent-soft);color:var(--fg)}
+:focus-visible{outline:none}
+.focusable:focus-visible{box-shadow:0 0 0 2px var(--ring)}
+.shell{min-height:100vh}
+/* Sidebar - 240px fixed, no collapse */
+.scrim{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.4);display:none}
+.scrim.show{display:block}
+.dark .scrim{background:rgba(0,0,0,.6)}
+.sidebar{position:fixed;inset-block:0;left:0;z-index:50;width:240px;display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--canvas);transition:transform 200ms var(--ease-out)}
+.brandbar{height:48px;display:flex;align-items:center;gap:8px;padding:0 12px;flex-shrink:0}
+.brandmark{width:20px;height:20px;border-radius:4px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--accent-fg)}
+.brandname{font-size:13px;font-weight:600}
+.sidenav{flex:1;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:20px}
+.navlabel{margin:0 0 4px;padding:0 8px;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-muted)}
+.navlist{display:flex;flex-direction:column;gap:2px}
+.navitem{display:flex;height:28px;align-items:center;gap:8px;border-radius:6px;padding:0 8px;font-size:13px;text-decoration:none;color:var(--fg-secondary);transition:background-color 120ms var(--ease-out),color 120ms var(--ease-out)}
+.navitem:hover{background:var(--surface-hover);color:var(--fg)}
+.navitem.active{background:var(--surface-sunken);font-weight:500;color:var(--fg)}
+.navitem svg{flex-shrink:0}
+.sidefooter{flex-shrink:0;border-top:1px solid var(--border);padding:8px}
+.usermenu{position:relative}
+.usertrigger{display:flex;width:100%;align-items:center;gap:8px;border:0;border-radius:6px;background:transparent;padding:6px 8px;text-align:left;color:var(--fg)}
+.usertrigger:hover{background:var(--surface-hover)}
+.avatar{width:24px;height:24px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:9999px;border:1px solid var(--border);background:var(--surface-sunken);font-size:11px;font-weight:500;color:var(--fg-secondary)}
+.username{display:block;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.useremail{display:block;font-size:11px;color:var(--fg-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.menu{position:absolute;left:8px;right:8px;bottom:calc(100% + 6px);background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-popover);padding:4px;display:none;z-index:60}
+.menu.open{display:block}
+.menuitem{display:flex;align-items:center;gap:8px;width:100%;border:0;background:transparent;border-radius:6px;padding:7px 8px;font-size:13px;color:var(--fg);text-align:left}
+.menuitem:hover{background:var(--surface-hover)}
+.menulabel{padding:6px 8px 2px;font-size:11px;color:var(--fg-muted)}
+.menusep{height:1px;background:var(--border);margin:4px 0}
+.radioset{padding:0 4px 4px}
+/* Content column */
+.content{padding-left:0}
+@media(min-width:1024px){.content{padding-left:240px}.scrim{display:none!important}}
+.mobilebar{position:sticky;top:0;z-index:30;display:flex;height:48px;align-items:center;gap:8px;border-bottom:1px solid var(--border);background:var(--canvas);padding:0 12px}
+@media(min-width:1024px){.mobilebar{display:none}}
+.iconbtn{display:flex;width:32px;height:32px;align-items:center;justify-content:center;border:0;border-radius:6px;background:transparent;color:var(--fg-secondary)}
+.iconbtn:hover{background:var(--surface-hover);color:var(--fg)}
+.main{margin:0 auto;max-width:80rem;padding:24px 16px 48px}
+@media(min-width:1024px){.main{padding:32px 32px 64px}}
+/* PageHeader */
+.pageheader{margin-bottom:24px;display:flex;flex-direction:column;gap:12px}
+@media(min-width:640px){.pageheader{flex-direction:row;align-items:flex-start;justify-content:space-between}}
+.pageheader h1{margin:0;font-size:20px;line-height:28px;letter-spacing:-0.014em;font-weight:600}
+.pageheader p{margin:4px 0 0;max-width:42rem;font-size:13px;color:var(--fg-muted)}
+.headeractions{display:flex;flex-shrink:0;align-items:center;gap:8px}
+/* Buttons - 32px control height */
+.btn{display:inline-flex;flex-shrink:0;height:32px;align-items:center;justify-content:center;gap:8px;border-radius:6px;font-size:13px;font-weight:500;white-space:nowrap;padding:0 12px;border:1px solid transparent;text-decoration:none;transition:background-color 120ms var(--ease-out)}
+.btn-primary{background:var(--accent);color:var(--accent-fg)}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-outline{border-color:var(--border);background:var(--surface);color:var(--fg)}
+.btn-outline:hover{background:var(--surface-hover)}
+.btn svg{pointer-events:none}
+/* Cards - flat bordered, no shadow */
+.card{border-radius:8px;border:1px solid var(--border);background:var(--surface)}
+.card-h{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:12px 16px 0}
+.card-t{margin:0;font-size:13px;font-weight:600}
+.card-d{margin:2px 0 0;font-size:12px;color:var(--fg-muted)}
+.card-c{padding:12px 16px 16px}
+.grid-stats{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px}
+@media(min-width:640px){.grid-stats{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.grid-stats{grid-template-columns:repeat(4,1fr)}}
+.stat{padding:16px}
+.stat-top{display:flex;align-items:center;gap:8px;color:var(--fg-muted)}
+.stat-top h3{margin:0;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat-v{margin:8px 0 0;font-size:26px;line-height:32px;letter-spacing:-0.02em;font-weight:600;font-variant-numeric:tabular-nums}
+.stat-d{margin:4px 0 0;font-size:12px;color:var(--fg-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.grid2{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:900px){.grid2{grid-template-columns:1fr 1fr}}
+.stack{display:flex;flex-direction:column;gap:12px}
+section.anchor{scroll-margin-top:64px;margin-bottom:16px}
+/* Table */
+.twrap{width:100%;overflow-x:auto;border-radius:0 0 8px 8px}
+table.grid{width:100%;border-collapse:collapse;font-size:13px}
+.grid thead{background:var(--surface-sunken)}
+.grid thead tr{border-bottom:1px solid var(--border)}
+.grid th{height:32px;padding:0 12px;text-align:left;vertical-align:middle;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:var(--fg-muted)}
+.grid tbody tr{border-bottom:1px solid var(--border);transition:background-color 120ms var(--ease-out)}
+.grid tbody tr:last-child{border-bottom:0}
+.grid tbody tr.clickable{cursor:pointer}
+.grid tbody tr.clickable:hover{background:var(--surface-hover)}
+.grid td{padding:10px 12px;vertical-align:middle;color:var(--fg-secondary)}
+.grid td.strong{color:var(--fg);font-weight:500}
+.nums{font-variant-numeric:tabular-nums;white-space:nowrap}
+/* StatusBadge - dot beside neutral text */
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:9999px;background:var(--surface-sunken);padding:2px 10px 2px 8px;font-size:12px;white-space:nowrap;color:var(--fg-secondary)}
+.badge.muted{color:var(--fg-muted)}
+.dot{width:6px;height:6px;flex-shrink:0;border-radius:9999px}
+.d-success{background:var(--success)}.d-info{background:var(--info)}.d-warning{background:var(--warning)}.d-special{background:var(--special)}.d-danger{background:var(--danger)}.d-neutral{background:var(--fg-subtle)}
+code.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:var(--surface-sunken);border:1px solid var(--border);border-radius:4px;padding:1px 6px;color:var(--fg);white-space:nowrap;font-variant-numeric:tabular-nums}
+/* DetailBox - Bookings.jsx pattern */
+.detailbox{border-radius:6px;border:1px solid var(--border);background:var(--surface-sunken);padding:10px}
+.detailbox .dl{margin:0;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-muted)}
+.detailbox .dv{margin:4px 0 0;font-size:13px;color:var(--fg)}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:560px){.dgrid{grid-template-columns:1fr}}
+.kv{display:grid;grid-template-columns:170px 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--border);font-size:13px}
+.kv:first-of-type{border-top:0}
+.kv dt{font-weight:600;color:var(--fg)}
+.kv dd{margin:0;color:var(--fg-secondary)}
+@media(max-width:640px){.kv{grid-template-columns:1fr;gap:2px}}
+/* Wizard steps */
+.wizard{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}
+@media(min-width:640px){.wizard{grid-template-columns:repeat(4,1fr)}}
+.wstep{text-align:left;border-radius:6px;border:1px solid var(--border);background:var(--surface);padding:10px 12px}
+.wstep:hover{background:var(--surface-hover)}
+.wstep.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.wstep .wn{font-size:11px;color:var(--fg-muted);font-variant-numeric:tabular-nums}
+.wstep b{display:block;font-size:13px;font-weight:600}
+.wstep span{font-size:12px;color:var(--fg-muted)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--border)}
+.fbtn{border:1px solid var(--border);background:var(--surface);border-radius:9999px;padding:5px 12px;font-size:12px;font-weight:500;color:var(--fg-secondary)}
+.fbtn:hover{background:var(--surface-hover);color:var(--fg)}
+.fbtn.on{background:var(--fg);border-color:var(--fg);color:var(--canvas)}
+.checklist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.checklist li{border:1px solid var(--border);background:var(--surface-sunken);border-radius:6px;padding:10px 12px;font-size:13px;color:var(--fg-secondary)}
+.checklist b{color:var(--fg)}
+.timeline{margin:0;padding:0;list-style:none}
+.timeline li{position:relative;padding:0 0 16px 22px}
+.timeline li:last-child{padding-bottom:0}
+.timeline li::before{content:"";position:absolute;left:5px;top:6px;width:7px;height:7px;border-radius:9999px;background:var(--accent)}
+.timeline li::after{content:"";position:absolute;left:8px;top:17px;bottom:-2px;width:1px;background:var(--border)}
+.timeline li:last-child::after{display:none}
+.timeline b{font-size:13px}
+.timeline p{margin:2px 0 0;font-size:13px;color:var(--fg-secondary)}
+.searchrow{display:flex;flex-direction:column;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)}
+@media(min-width:640px){.searchrow{flex-direction:row;align-items:center;justify-content:space-between}}
+.search{width:100%;max-width:20rem;height:32px;border:1px solid var(--border-strong);border-radius:6px;background:var(--surface);color:var(--fg);font-size:13px;padding:0 10px}
+.search::placeholder{color:var(--fg-subtle)}
+.pager{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--border);padding:12px 16px;font-size:12px;color:var(--fg-muted);font-variant-numeric:tabular-nums}
+@media(min-width:640px){.pager{flex-direction:row;align-items:center;justify-content:space-between}}
+/* Diagrams - inline SVG painted with theme tokens */
+.dg{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.dg svg{display:block;width:100%;height:auto;min-width:760px;font-family:'Inter',system-ui,sans-serif}
+.dg .nd{fill:var(--surface);stroke:var(--border-strong);stroke-width:1}
+.dg .nd.ghost{fill:none;stroke-dasharray:4 3}
+.dg .nd.core{fill:var(--accent-soft);stroke:var(--accent)}
+.dg .nd.s-special{fill:var(--special-soft);stroke:var(--special)}
+.dg .nd.s-warning{fill:var(--warning-soft);stroke:var(--warning)}
+.dg .nd.s-success{fill:var(--success-soft);stroke:var(--success)}
+.dg .nd.s-info{fill:var(--info-soft);stroke:var(--info)}
+.dg .nd.s-danger{fill:var(--danger-soft);stroke:var(--danger)}
+.dg .nd.s-neutral{fill:var(--surface-sunken);stroke:var(--border-strong)}
+.dg .tl{fill:var(--fg);font-size:12px;font-weight:600}
+.dg .ts{fill:var(--fg-muted);font-size:11px}
+.dg .tc{fill:var(--fg-secondary);font-size:11px}
+.dg .tm{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;fill:var(--fg)}
+.dg .el{fill:var(--fg-secondary);font-size:11px;stroke:var(--surface);stroke-width:4px;paint-order:stroke;stroke-linejoin:round}
+.dg .el.bad{fill:var(--danger)}
+.dg .el.acc{fill:var(--accent-text)}
+.dg .ed{fill:none;stroke:var(--fg-subtle);stroke-width:1.25}
+.dg .ed.acc{stroke:var(--accent)}
+.dg .ed.bad{stroke:var(--danger);stroke-dasharray:4 3}
+.dg .ed.dash{stroke-dasharray:4 3}
+.dg .life{stroke:var(--border-strong);stroke-dasharray:3 4}
+.dg .rule{stroke:var(--border);stroke-width:1}
+.dg .bracket{fill:none;stroke:var(--fg-subtle);stroke-width:1}
+.mk{fill:var(--fg-subtle)}.mk-acc{fill:var(--accent)}.mk-bad{fill:var(--danger)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:12px;color:var(--fg-muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:22px;height:0;border-top:1.5px solid var(--fg-subtle)}
+.legend i.acc{border-top:1.5px solid var(--accent)}
+.legend i.bad{border-top:1.5px dashed var(--danger)}
+.legend i.dash{border-top-style:dashed}
+.scrollhint{display:none;margin:8px 0 0;font-size:11px;color:var(--fg-subtle)}
+@media(max-width:800px){.scrollhint{display:block}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+<script>var t=null;try{t=localStorage.getItem("flow-theme");}catch(e){}if(t==="dark"||(!t&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark");}</script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ah-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-acc"/></marker>
+<marker id="ah-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-bad"/></marker>
+</defs></svg>
+<div class="shell">
+<div class="scrim" id="scrim"></div>
+<aside class="sidebar" id="sidebar">
+<div class="brandbar"><span class="brandmark"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span><span class="brandname">CareNest</span></div>
+<nav class="sidenav">
+<div><p class="navlabel">General</p><div class="navlist">
+<a class="navitem active" href="#overview"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>Overview</span></a>
+<a class="navitem" href="#userapp"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg><span>User app</span></a>
+<a class="navitem" href="#booking"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>Booking</span></a>
+<a class="navitem" href="#sequence"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3v18M12 3v18M19 3v18M5 8h7M12 13h7M5 18h14"/></svg><span>End to end</span></a>
+<a class="navitem" href="#adminflow"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg><span>Admin</span></a>
+<a class="navitem" href="#nurses"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg><span>Nurses</span></a>
+<a class="navitem" href="#notify"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span>Notifications</span></a>
+</div></div>
+<div><p class="navlabel">Backend</p><div class="navlist">
+<a class="navitem" href="#api"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg><span>API contract</span></a>
+<a class="navitem" href="#data"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg><span>Data model</span></a>
+</div></div>
+<div><p class="navlabel">Settings</p><div class="navlist">
+<a class="navitem" href="#help"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg><span>Help and Inputs</span></a>
+</div></div>
+</nav>
+<div class="sidefooter"><div class="usermenu">
+<button class="usertrigger focusable" id="userTrigger" aria-haspopup="true"><span class="avatar">FL</span><span style="min-width:0;flex:1"><span class="username">Flow Reader</span><span class="useremail">flow.md v1.0</span></span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg></button>
+<div class="menu" id="userMenu" role="menu">
+<div class="menulabel">Appearance</div>
+<div class="radioset">
+<button class="menuitem" data-theme="light"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg> Light</button>
+<button class="menuitem" data-theme="dark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg> Dark</button>
+</div>
+</div>
+</div></div>
+</aside>
+<div class="content">
+<header class="mobilebar">
+<button class="iconbtn focusable" id="menuBtn" aria-label="Open navigation"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<span class="brandmark"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span>
+<span class="brandname">CareNest</span>
+</header>
+<main class="main">
+<div class="pageheader"><div><h1>Process Flow</h1><p>Agreed flow for flow.md v1.0, dated 2026-09-24. User app plus backend API plus nurse app plus external admin dashboard.</p></div>
+<div class="headeractions"><span class="badge"><span class="dot d-info"></span>v1.0 agreed</span><a class="btn btn-outline focusable" href="#booking">View lifecycle</a><a class="btn btn-primary focusable" href="#help">Team inputs</a></div></div>
+<section class="anchor" id="overview">
+<div class="grid2">
+<div class="card"><div class="card-h"><div><h3 class="card-t">System parts</h3><p class="card-d">Folder plus stack, exactly as locked</p></div></div><div class="card-c">
+<div class="twrap"><table class="grid"><thead><tr><th>Part</th><th>Folder</th><th>Stack</th></tr></thead><tbody>
+<tr><td class="strong">User app (CareNest)</td><td><code class="code">care_nest/</code></td><td>Flutter, BLoC state management</td></tr>
+<tr><td class="strong">Backend API</td><td><code class="code">DRAPP-BACKEND/</code></td><td>FastAPI, PostgreSQL, Alembic, Razorpay, Brevo, MSG91</td></tr>
+<tr><td class="strong">Nurse app</td><td><code class="code">cn_nurse/</code></td><td>Flutter</td></tr>
+<tr><td class="strong">Admin dashboard</td><td>external project</td><td>Consumes the backend API</td></tr>
+</tbody></table></div>
+</div></div>
+<div class="card"><div class="card-h"><div><h3 class="card-t">Decisions locked in v1.0</h3><p class="card-d">The four lines that prevent arguments</p></div></div><div class="card-c"><div class="stack">
+<div class="detailbox"><p class="dl">01 - Confirmation</p><p class="dv">Admin confirms every paid booking. Payment does not auto-confirm.</p></div>
+<div class="detailbox"><p class="dl">02 - SMS</p><p class="dv">SMS provider is MSG91 for OTP, admin alerts, nurse alerts, user updates.</p></div>
+<div class="detailbox"><p class="dl">03 - State</p><p class="dv">BLoC replaces Provider across the whole user app.</p></div>
+<div class="detailbox"><p class="dl">04 - Push</p><p class="dv">No device push in this version. SMS plus email plus in-app refresh. FCM later.</p></div>
+</div></div></div>
+</div>
+<div class="card" style="margin-top:12px"><div class="card-h"><div><h3 class="card-t">System map</h3><p class="card-d">Three clients, one backend, four external services</p></div></div><div class="card-c"><div class="dg">
+<svg viewBox="0 0 960 340" role="img" aria-label="System map: user app, nurse app and admin dashboard call the backend API, which uses PostgreSQL, Razorpay, Brevo and MSG91">
+<path class="ed" d="M220,62 C290,62 290,140 356,140" marker-end="url(#ah)"/>
+<path class="ed" d="M220,180 L356,180" marker-end="url(#ah)"/>
+<path class="ed" d="M220,298 C290,298 290,220 356,220" marker-end="url(#ah)"/>
+<text class="el" x="288" y="172" text-anchor="middle">REST + JWT</text>
+<path class="ed" d="M600,140 C670,140 670,48 736,48" marker-end="url(#ah)"/>
+<path class="ed" d="M600,160 C670,160 670,128 736,128" marker-end="url(#ah)"/>
+<path class="ed" d="M600,200 C670,200 670,208 736,208" marker-end="url(#ah)"/>
+<path class="ed" d="M600,220 C670,220 670,288 736,288" marker-end="url(#ah)"/>
+<rect class="nd" x="20" y="30" width="200" height="64" rx="8"/><text class="tl" x="36" y="56">User app (CareNest)</text><text class="ts" x="36" y="75">care_nest/ · Flutter + BLoC</text>
+<rect class="nd" x="20" y="148" width="200" height="64" rx="8"/><text class="tl" x="36" y="174">Nurse app</text><text class="ts" x="36" y="193">cn_nurse/ · Flutter</text>
+<rect class="nd" x="20" y="266" width="200" height="64" rx="8"/><text class="tl" x="36" y="292">Admin dashboard</text><text class="ts" x="36" y="311">external project</text>
+<rect class="nd core" x="360" y="104" width="240" height="152" rx="8"/><text class="tl" x="378" y="130">Backend API</text><text class="ts" x="378" y="148">DRAPP-BACKEND/ · FastAPI</text>
+<line class="rule" x1="360" y1="162" x2="600" y2="162"/>
+<text class="tc" x="378" y="186">OTP verification gate</text><text class="tc" x="378" y="208">Booking lifecycle + refunds</text><text class="tc" x="378" y="230">Notifications: email, SMS, feed</text>
+<rect class="nd" x="740" y="20" width="200" height="56" rx="8"/><text class="tl" x="756" y="44">PostgreSQL</text><text class="ts" x="756" y="62">data · Alembic migrations</text>
+<rect class="nd" x="740" y="100" width="200" height="56" rx="8"/><text class="tl" x="756" y="124">Razorpay</text><text class="ts" x="756" y="142">orders, verify, refunds</text>
+<rect class="nd" x="740" y="180" width="200" height="56" rx="8"/><text class="tl" x="756" y="204">Brevo</text><text class="ts" x="756" y="222">email OTP + email alerts</text>
+<rect class="nd" x="740" y="260" width="200" height="56" rx="8"/><text class="tl" x="756" y="284">MSG91</text><text class="ts" x="756" y="302">phone OTP + SMS alerts</text>
+</svg></div><p class="scrollhint">Scroll sideways to see the full diagram.</p></div></div>
+</section>
+<section class="anchor" id="actors">
+<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">Actors</h1><p>Who moves a booking forward.</p></div></div>
+<div class="card"><div class="twrap"><table class="grid"><thead><tr><th>Actor</th><th>Works in</th><th>Does what</th></tr></thead><tbody>
+<tr><td class="strong">User</td><td>CareNest app</td><td>Books a service for self or a family member and pays.</td></tr>
+<tr><td class="strong">Admin</td><td>External dashboard</td><td>Creates services and nurses, confirms or denies paid bookings, can reassign or cancel.</td></tr>
+<tr><td class="strong">Nurse</td><td>Nurse app</td><td>Declares leave and working hours, receives assignments, starts and completes visits.</td></tr>
+<tr><td class="strong">System</td><td>Backend</td><td>Backend rules, payments, refunds, notifications.</td></tr>
+</tbody></table></div></div>
+</section>
+<section class="anchor" id="userapp">
+<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">User app - signup and services</h1><p>Register, Verify Contact, Home, and after-booking states.</p></div></div>
+<div class="card" style="margin-bottom:12px"><div class="card-h"><div><h3 class="card-t">Signup, login and password reset</h3><p class="card-d">No token until both email and phone are verified</p></div></div><div class="card-c"><div class="dg">
+<svg viewBox="0 0 960 300" role="img" aria-label="Auth flow: Splash to Login to Register to Verify Contact to Home. Unverified login returns to Verify Contact. Forgot password goes email, email OTP, new password, back to Login.">
+<path class="ed" d="M230,90 C230,18 895,18 895,88" marker-end="url(#ah)"/>
+<text class="el" x="570" y="37" text-anchor="middle">fully verified login</text>
+<path class="ed dash" d="M290,90 C290,55 705,55 705,88" marker-end="url(#ah)"/>
+<text class="el" x="498" y="67" text-anchor="middle">not verified: 403 VERIFICATION_REQUIRED</text>
+<path class="ed" d="M140,116 L198,116" marker-end="url(#ah)"/><text class="el" x="170" y="108" text-anchor="middle">no token</text>
+<path class="ed" d="M320,116 L418,116" marker-end="url(#ah)"/><text class="el" x="369" y="108" text-anchor="middle">Create account</text>
+<path class="ed" d="M550,116 L628,116" marker-end="url(#ah)"/><text class="el" x="590" y="108" text-anchor="middle">submit</text>
+<path class="ed acc" d="M780,116 L848,116" marker-end="url(#ah-acc)"/><text class="el acc" x="814" y="108" text-anchor="middle">token</text>
+<rect class="nd" x="20" y="90" width="120" height="52" rx="8"/><text class="tl" x="34" y="112">Splash</text><text class="ts" x="34" y="130">checks token</text>
+<rect class="nd" x="200" y="90" width="120" height="52" rx="8"/><text class="tl" x="214" y="112">Login</text><text class="ts" x="214" y="130">email + password</text>
+<rect class="nd" x="420" y="90" width="130" height="52" rx="8"/><text class="tl" x="434" y="112">Register</text><text class="ts" x="434" y="130">unverified account</text>
+<rect class="nd s-warning" x="630" y="90" width="150" height="52" rx="8"/><text class="tl" x="644" y="112">Verify Contact</text><text class="ts" x="644" y="130">email OTP + phone OTP</text>
+<rect class="nd core" x="850" y="90" width="90" height="52" rx="8"/><text class="tl" x="864" y="112">Home</text><text class="ts" x="864" y="130">services</text>
+<path class="ed" d="M260,142 L260,228" marker-end="url(#ah)"/><text class="el" x="268" y="190">Forgot password</text>
+<path class="ed" d="M330,256 L418,256" marker-end="url(#ah)"/>
+<path class="ed" d="M550,256 L628,256" marker-end="url(#ah)"/>
+<path class="ed" d="M780,256 L848,256" marker-end="url(#ah)"/>
+<rect class="nd" x="200" y="230" width="130" height="52" rx="8"/><text class="tl" x="214" y="252">Enter email</text><text class="ts" x="214" y="270">forgot-password</text>
+<rect class="nd" x="420" y="230" width="130" height="52" rx="8"/><text class="tl" x="434" y="252">Email OTP</text><text class="ts" x="434" y="270">purpose: reset</text>
+<rect class="nd" x="630" y="230" width="150" height="52" rx="8"/><text class="tl" x="644" y="252">New password</text><text class="ts" x="644" y="270">reset-password-otp</text>
+<rect class="nd ghost" x="850" y="230" width="90" height="52" rx="8"/><text class="tl" x="864" y="252">Login</text><text class="ts" x="864" y="270">sign in again</text>
+</svg></div>
+<div class="legend"><span><i></i>moves forward</span><span><i class="dash"></i>redirect</span><span><i class="acc"></i>token issued</span></div>
+<p class="scrollhint">Scroll sideways to see the full diagram.</p></div></div>
+<div class="grid2">
+<div class="card"><div class="card-h"><div><h3 class="card-t">Signup and verification</h3><p class="card-d">No token until both channels verify</p></div></div><div class="card-c">
+<dl style="margin:0">
+<div class="kv"><dt>Register collects</dt><dd>Full name, phone number, email, password, confirm password. All required, phone 10 digits, password 8 or more characters, passwords match.</dd></div>
+<div class="kv"><dt>On submit</dt><dd>Backend creates the account in an <b>unverified</b> state and sends a 6-digit OTP to the email (Brevo) and a 6-digit OTP to the phone (MSG91). No login token is issued yet.</dd></div>
+<div class="kv"><dt>Verify Contact</dt><dd>Two OTP inputs, each with a 10-minute expiry countdown, a Resend button enabled after 60 seconds and limited to 5 sends per 10 minutes, and a verified tick once accepted. 5 wrong attempts locks that code; resend to get a new one.</dd></div>
+<div class="kv"><dt>Continue</dt><dd>Enabled only when both email and phone are verified. Backend returns the login token and the app enters Home.</dd></div>
+<div class="kv"><dt>Interrupted</dt><dd>Closing mid-way returns to Verify Contact on next email plus password login, not Home.</dd></div>
+<div class="kv"><dt>Forgot password</dt><dd>Enter email, OTP to email, enter OTP, set new password, back to Login.</dd></div>
+<div class="kv"><dt>State</dt><dd><code class="code">unauthenticated</code> to <code class="code">registering</code> to <code class="code">awaitingVerification</code> to <code class="code">authenticated(user)</code>, plus <code class="code">passwordResetInProgress</code>.</dd></div>
+</dl>
+</div></div>
+<div class="stack">
+<div class="card"><div class="card-h"><div><h3 class="card-t">Home and services</h3><p class="card-d">Admin-created catalogue</p></div></div><div class="card-c"><div class="dgrid">
+<div class="detailbox"><p class="dl">Home</p><p class="dv">Lists all active services: name, price per hour, short description.</p></div>
+<div class="detailbox"><p class="dl">Service Detail</p><p class="dv">Full description, price per hour, and a Book Now button.</p></div>
+</div></div></div>
+<div class="card"><div class="card-h"><div><h3 class="card-t">After booking</h3><p class="card-d">Current plus history plus detail</p></div></div><div class="card-c">
+<div class="twrap"><table class="grid"><thead><tr><th>Group</th><th>Statuses</th><th>Actions</th></tr></thead><tbody>
+<tr><td class="strong">Current bookings</td><td><span class="badge"><span class="dot d-warning"></span>awaiting_admin</span> <span class="badge"><span class="dot d-success"></span>confirmed</span> <span class="badge"><span class="dot d-info"></span>in_progress</span></td><td>Cancel while awaiting_admin or confirmed, not once started. Paid cancel triggers refund.</td></tr>
+<tr><td class="strong">History</td><td><span class="badge muted"><span class="dot d-neutral"></span>completed</span> <span class="badge"><span class="dot d-danger"></span>rejected</span> <span class="badge"><span class="dot d-danger"></span>cancelled</span></td><td>Rejected shows admin reason and refund status.</td></tr>
+</tbody></table></div>
+<p style="font-size:13px;color:var(--fg-secondary)">Booking detail: all details, assigned nurse name, map of the service address, notes. Profile: edit name and phone, family members, saved addresses, logout.</p>
+</div></div>
+</div>
+</div>
+</section>
+<section class="anchor" id="booking">
+<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">Booking wizard and lifecycle</h1><p>The wizard holds one draft. Backend amount is the only price truth.</p></div><div class="headeractions"><button class="btn btn-outline focusable" id="copyFlow">Copy flow</button></div></div>
+<div class="card"><div class="card-h"><div><h3 class="card-t">Wizard</h3><p class="card-d">Select a step to inspect it</p></div></div><div class="card-c">
+<div class="wizard" id="wizard">
+<button class="wstep sel focusable" data-t="Pick the day (today or tomorrow, as currently limited) and the start time."><span class="wn">Step 01</span><b>Date and Time</b><span>day plus start</span></button>
+<button class="wstep focusable" data-t="Hours 1 to 12 or days 1 to 7. Price is price per hour times hours and is calculated by the backend; the app displays the backend figure."><span class="wn">Step 02</span><b>Duration</b><span>hours or days</span></button>
+<button class="wstep focusable" data-t="Backend returns only nurses who are active, not on leave and inside declared working hours (no declaration means available), and not holding an overlapping booking in pending_payment for 15 minutes, awaiting_admin, confirmed, or in_progress. User picks one. Phone numbers are not shown."><span class="wn">Step 03</span><b>Available Nurses</b><span>pick one free</span></button>
+<button class="wstep focusable" data-t="Myself takes patient name and contact phone from profile. Family member picks an existing member or adds one inline: name, age 1 to 109, sex Male/Female/Other, point-of-contact phone. Saved to family_members and reusable. Optional condition and notes."><span class="wn">Step 04</span><b>Patient</b><span>self or family</span></button>
+<button class="wstep focusable" data-t="Pick a saved address or type one, with the map pin via GPS auto-detect or tap on map."><span class="wn">Step 05</span><b>Address</b><span>saved plus map</span></button>
+<button class="wstep focusable" data-t="Shows service, date and time, duration, nurse, patient, address, and total amount from the backend."><span class="wn">Step 06</span><b>Review</b><span>backend total</span></button>
+<button class="wstep focusable" data-t="Booking is created as pending_payment, a Razorpay order is created for the backend amount, Razorpay checkout opens. On success the app calls verify; the backend checks the signature and moves the booking to awaiting_admin."><span class="wn">Step 07</span><b>Pay</b><span>Razorpay</span></button>
+<button class="wstep focusable" data-t="Payment received. Your booking is waiting for admin confirmation. We will SMS you when it is confirmed. Abandoned checkout stays pending_payment and the nurse hold expires after 15 minutes."><span class="wn">Step 08</span><b>Success</b><span>SMS promise</span></button>
+</div>
+<div class="detailbox"><p class="dl">Selected step</p><p class="dv" id="wizardDetail">Pick the day (today or tomorrow, as currently limited) and the start time.</p></div>
+</div></div>
+<div class="card" style="margin-top:12px"><div class="card-h"><div><h3 class="card-t">Lifecycle diagram</h3><p class="card-d">Solid moves forward, dashed moves out</p></div></div><div class="card-c">
+<div class="dg">
+<svg viewBox="0 0 960 330" role="img" aria-label="Booking state machine: pending_payment, pay, awaiting_admin, admin confirm, confirmed, nurse start, in_progress, nurse finish, completed. Admin deny leads to rejected. User or admin cancel leads to cancelled. Both refund when paid.">
+<path class="bracket" d="M20,44 V36 H745 V44"/>
+<text class="el" x="382" y="32" text-anchor="middle">blocks the nurse's slot (pending_payment only for 15 min)</text>
+<path class="ed acc" d="M160,88 L213,88" marker-end="url(#ah-acc)"/><text class="el acc" x="187" y="81" text-anchor="middle">pay</text><text class="ts" x="187" y="104" text-anchor="middle">user</text>
+<path class="ed acc" d="M355,88 L408,88" marker-end="url(#ah-acc)"/><text class="el acc" x="382" y="81" text-anchor="middle">confirm</text><text class="ts" x="382" y="104" text-anchor="middle">admin</text>
+<path class="ed acc" d="M550,88 L603,88" marker-end="url(#ah-acc)"/><text class="el acc" x="577" y="81" text-anchor="middle">start</text><text class="ts" x="577" y="104" text-anchor="middle">nurse</text>
+<path class="ed acc" d="M745,88 L798,88" marker-end="url(#ah-acc)"/><text class="el acc" x="772" y="81" text-anchor="middle">finish</text><text class="ts" x="772" y="104" text-anchor="middle">nurse</text>
+<rect class="nd s-special" x="20" y="60" width="140" height="56" rx="8"/><text class="tm" x="34" y="84">pending_payment</text><text class="ts" x="34" y="102">created, unpaid</text>
+<rect class="nd s-warning" x="215" y="60" width="140" height="56" rx="8"/><text class="tm" x="229" y="84">awaiting_admin</text><text class="ts" x="229" y="102">paid, undecided</text>
+<rect class="nd s-success" x="410" y="60" width="140" height="56" rx="8"/><text class="tm" x="424" y="84">confirmed</text><text class="ts" x="424" y="102">nurse assigned</text>
+<rect class="nd s-info" x="605" y="60" width="140" height="56" rx="8"/><text class="tm" x="619" y="84">in_progress</text><text class="ts" x="619" y="102">nurse at the visit</text>
+<rect class="nd s-neutral" x="800" y="60" width="140" height="56" rx="8"/><text class="tm" x="814" y="84">completed</text><text class="ts" x="814" y="102">terminal</text>
+<text class="ts" x="52" y="146">abandoned checkout:</text><text class="ts" x="52" y="162">15-min hold expires,</text><text class="ts" x="52" y="178">row stays</text>
+<path class="ed bad" d="M250,116 V218" marker-end="url(#ah-bad)"/><text class="el bad" x="258" y="172">deny</text>
+<path class="ed bad" d="M330,116 C330,175 440,165 440,218" marker-end="url(#ah-bad)"/><text class="el bad" x="384" y="148">user cancel</text>
+<path class="ed bad" d="M480,116 V218" marker-end="url(#ah-bad)"/><text class="el bad" x="488" y="172">user / admin cancel</text>
+<path class="ed bad" d="M675,116 V218" marker-end="url(#ah-bad)"/><text class="el bad" x="683" y="172">admin cancel</text>
+<path class="ed bad" d="M40,116 V304 H560 V278" marker-end="url(#ah-bad)"/><text class="el bad" x="300" y="308" text-anchor="middle">user cancels before paying</text>
+<rect class="nd s-danger" x="215" y="220" width="140" height="56" rx="8"/><text class="tm" x="229" y="244">rejected</text><text class="ts" x="229" y="262">reason + refund</text>
+<rect class="nd s-danger" x="410" y="220" width="335" height="56" rx="8"/><text class="tm" x="424" y="244">cancelled</text><text class="ts" x="424" y="262">refund issued if the payment completed</text>
+</svg></div>
+<div class="legend"><span><i class="acc"></i>moves forward</span><span><i class="bad"></i>exits, refund when paid</span><span><span class="dot d-neutral"></span>gray and red are terminal</span></div>
+<p class="scrollhint">Scroll sideways to see the full diagram.</p>
+<div class="filters" id="statusFilters" style="padding:0;border:0;margin-top:16px">
+<button class="fbtn on" data-f="all">All</button><button class="fbtn" data-f="blocks">Blocks slot</button><button class="fbtn" data-f="terminal">Terminal</button><button class="fbtn" data-f="refund">Refund</button>
+</div>
+<div class="twrap" style="margin-top:12px;border:1px solid var(--border);border-radius:6px"><table class="grid" id="statusTable"><thead><tr><th>Status</th><th>Meaning</th><th>Blocks slot</th><th>Who moves it</th></tr></thead><tbody>
+<tr data-tags="blocks"><td class="strong">pending_payment</td><td>Created, checkout not finished</td><td class="nums">Yes, 15 min</td><td>User pays, or cancels</td></tr>
+<tr data-tags="blocks"><td class="strong">awaiting_admin</td><td>Paid, admin has not decided</td><td class="nums">Yes</td><td>Admin confirms or denies; user can cancel</td></tr>
+<tr data-tags="blocks"><td class="strong">confirmed</td><td>Admin approved, nurse assigned</td><td class="nums">Yes</td><td>Nurse starts; admin cancels or reassigns; user cancels</td></tr>
+<tr data-tags="blocks"><td class="strong">in_progress</td><td>Nurse at the visit</td><td class="nums">Yes</td><td>Nurse completes; admin cancels</td></tr>
+<tr data-tags="terminal"><td class="strong">completed</td><td>Done</td><td class="nums">No</td><td>Terminal</td></tr>
+<tr data-tags="terminal refund"><td class="strong">rejected</td><td>Admin denied, refund issued</td><td class="nums">No</td><td>Terminal</td></tr>
+<tr data-tags="terminal refund"><td class="strong">cancelled</td><td>Withdrawn by user or admin</td><td class="nums">No</td><td>Terminal</td></tr>
+</tbody></table></div>
+<div class="detailbox" style="margin-top:12px"><p class="dl">Refund rule</p><p class="dv">Whenever a booking with a completed payment moves to rejected or cancelled, the backend calls Razorpay refund for the full amount and records <code class="code">razorpay_refund_id</code>. Payment becomes <code class="code">refunded</code>, or <code class="code">refund_failed</code> with admins emailed to refund manually.</p></div>
+</div></div>
+</section>
+<section class="anchor" id="sequence">
+<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">End to end: one paid booking</h1><p>Every message between the user app, backend, Razorpay, admin dashboard and nurse app, top to bottom.</p></div></div>
+<div class="card"><div class="card-h"><div><h3 class="card-t">Sequence diagram</h3><p class="card-d">Happy path. A deny at the confirm step moves the booking to rejected and refunds.</p></div></div><div class="card-c"><div class="dg">
+<svg viewBox="0 0 960 682" role="img" aria-label="Sequence of one paid booking across user app, backend, Razorpay, admin dashboard and nurse app">
+<line class="life" x1="100" y1="60" x2="100" y2="674"/>
+<line class="life" x1="290" y1="60" x2="290" y2="674"/>
+<line class="life" x1="480" y1="60" x2="480" y2="674"/>
+<line class="life" x1="670" y1="60" x2="670" y2="674"/>
+<line class="life" x1="860" y1="60" x2="860" y2="674"/>
+<rect class="nd" x="25" y="12" width="150" height="46" rx="8"/><text class="tl" x="100" y="32" text-anchor="middle">User app</text><text class="ts" x="100" y="48" text-anchor="middle">care_nest</text>
+<rect class="nd core" x="215" y="12" width="150" height="46" rx="8"/><text class="tl" x="290" y="32" text-anchor="middle">Backend</text><text class="ts" x="290" y="48" text-anchor="middle">FastAPI</text>
+<rect class="nd" x="405" y="12" width="150" height="46" rx="8"/><text class="tl" x="480" y="32" text-anchor="middle">Razorpay</text><text class="ts" x="480" y="48" text-anchor="middle">payments</text>
+<rect class="nd" x="595" y="12" width="150" height="46" rx="8"/><text class="tl" x="670" y="32" text-anchor="middle">Admin</text><text class="ts" x="670" y="48" text-anchor="middle">dashboard</text>
+<rect class="nd" x="785" y="12" width="150" height="46" rx="8"/><text class="tl" x="860" y="32" text-anchor="middle">Nurse app</text><text class="ts" x="860" y="48" text-anchor="middle">cn_nurse</text>
+<path class="ed" d="M100,96 L288,96" marker-end="url(#ah)"/>
+<text class="el" x="195" y="90" text-anchor="middle">create booking</text>
+<rect class="nd s-special" x="228" y="115" width="124" height="24" rx="12"/><text class="tm" x="290" y="131" text-anchor="middle">pending_payment</text>
+<path class="ed" d="M290,160 L478,160" marker-end="url(#ah)"/>
+<text class="el" x="385" y="154" text-anchor="middle">create order for backend amount</text>
+<path class="ed" d="M100,192 L478,192" marker-end="url(#ah)"/>
+<text class="el" x="290" y="186" text-anchor="middle">Razorpay checkout, pay</text>
+<path class="ed" d="M100,224 L288,224" marker-end="url(#ah)"/>
+<text class="el" x="195" y="218" text-anchor="middle">verify payment</text>
+<rect class="nd s-warning" x="228" y="243" width="124" height="24" rx="12"/><text class="tm" x="290" y="259" text-anchor="middle">awaiting_admin</text>
+<path class="ed" d="M290,288 L668,288" marker-end="url(#ah)"/>
+<text class="el" x="480" y="282" text-anchor="middle">feed item + SMS + email</text>
+<path class="ed" d="M290,320 L102,320" marker-end="url(#ah)"/>
+<text class="el" x="195" y="314" text-anchor="middle">SMS: request received</text>
+<path class="ed acc" d="M670,352 L292,352" marker-end="url(#ah-acc)"/>
+<text class="el acc" x="480" y="346" text-anchor="middle">confirm (deny = refund)</text>
+<rect class="nd s-success" x="228" y="371" width="124" height="24" rx="12"/><text class="tm" x="290" y="387" text-anchor="middle">confirmed</text>
+<path class="ed" d="M290,416 L858,416" marker-end="url(#ah)"/>
+<text class="el" x="575" y="410" text-anchor="middle">SMS + email: new visit, full details</text>
+<path class="ed" d="M290,448 L102,448" marker-end="url(#ah)"/>
+<text class="el" x="195" y="442" text-anchor="middle">SMS: confirmed</text>
+<path class="ed acc" d="M860,480 L292,480" marker-end="url(#ah-acc)"/>
+<text class="el acc" x="575" y="474" text-anchor="middle">start visit</text>
+<rect class="nd s-info" x="228" y="499" width="124" height="24" rx="12"/><text class="tm" x="290" y="515" text-anchor="middle">in_progress</text>
+<path class="ed" d="M290,544 L102,544" marker-end="url(#ah)"/>
+<text class="el" x="195" y="538" text-anchor="middle">SMS</text>
+<path class="ed" d="M290,544 L668,544" marker-end="url(#ah)"/>
+<text class="el" x="480" y="538" text-anchor="middle">feed</text>
+<path class="ed acc" d="M860,576 L292,576" marker-end="url(#ah-acc)"/>
+<text class="el acc" x="575" y="570" text-anchor="middle">complete visit</text>
+<rect class="nd s-neutral" x="228" y="595" width="124" height="24" rx="12"/><text class="tm" x="290" y="611" text-anchor="middle">completed</text>
+<path class="ed" d="M290,640 L102,640" marker-end="url(#ah)"/>
+<text class="el" x="195" y="634" text-anchor="middle">SMS</text>
+<path class="ed" d="M290,640 L668,640" marker-end="url(#ah)"/>
+<text class="el" x="480" y="634" text-anchor="middle">feed</text>
+</svg>
+</div><p class="scrollhint">Scroll sideways to see the full diagram.</p></div></div>
+</section>
+<section class="anchor" id="adminflow">
+<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">Admin flow</h1><p>External dashboard, via API.</p></div></div>
+<div class="card"><div class="card-h"><div><h3 class="card-t">Five admin moves</h3><p class="card-d">Catalogue to decision to oversight</p></div></div><div class="card-c"><ol class="timeline">
+<li><b>1. Create services and nurses</b><p>Services: name, description, price per hour, active. Nurses: name, email, phone, temporary password; nurse must change it on first login.</p></li>
+<li><b>2. Get pinged on payment</b><p>Homepage feed gets <code class="code">Booking #123 needs confirmation</code> from <code class="code">GET /admin/notifications</code>. Every admin phone in <code class="code">ADMIN_ALERT_PHONES</code> gets an SMS. Admin emails receive a summary.</p></li>
+<li><b>3. Confirm or deny</b><p>Open <code class="code">GET /bookings?status=awaiting_admin</code>. Confirm with <code class="code">PATCH /bookings/{id}/confirm</code>, keeping the chosen nurse or picking another free nurse. Deny with <code class="code">PATCH /bookings/{id}/deny</code> plus reason. Backend refunds on deny.</p></li>
+<li><b>4. Manage live bookings</b><p>Cancel with refund, reassign the nurse, add notes. Feed items arrive when a nurse starts or completes a visit or a user cancels.</p></li>
+<li><b>5. Review nurses</b><p>View each nurse leave and worked days.</p></li>
+</ol></div></div>
+</section>
+<section class="anchor" id="nurses">
+<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">Nurse app flow</h1><p>cn_nurse in six moves.</p></div></div>
+<div class="grid2">
+<div class="card"><div class="card-h"><div><h3 class="card-t">Access and schedule</h3><p class="card-d">Login first, availability second</p></div></div><div class="card-c"><ol class="timeline">
+<li><b>1. Login</b><p>With the email and temporary password the admin issued. Forced password reset on first login.</p></li>
+<li><b>2. Schedule</b><p>Mark leave days or working hours per day. Days with no entry count as available.</p></li>
+</ol></div></div>
+<div class="card"><div class="card-h"><div><h3 class="card-t">Visit loop</h3><p class="card-d">Assignment to completion</p></div><span class="badge"><span class="dot d-success"></span>visits</span></div><div class="card-c"><ol class="timeline">
+<li><b>3. Assignment ping</b><p>On admin confirm, nurse receives SMS <code class="code">You have a new visit: booking #123…</code> and an email with the same details. Booking appears in Home / My Bookings.</p></li>
+<li><b>4. Booking detail</b><p>Patient name, age, sex, condition, contact phone, address with map pin, time slot.</p></li>
+<li><b>5. Start and complete</b><p>Start visit sets <code class="code">in_progress</code>, Complete visit sets <code class="code">completed</code>. Each change goes to the admin feed and the user receives an SMS.</p></li>
+<li><b>6. Cancelled</b><p>If cancelled after assignment, the nurse gets an SMS and the booking leaves the active list.</p></li>
+</ol></div></div>
+</div>
+</section>
+<section class="anchor" id="notify">
+<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">Notification matrix</h1><p>Email via Brevo, SMS via MSG91, feed via admin_notifications. No push.</p></div></div>
+<div class="card">
+<div class="searchrow"><input class="search focusable" id="notifySearch" placeholder="Search events..." aria-label="Search events"><span class="badge"><span class="dot d-info"></span>6 events</span></div>
+<div class="twrap"><table class="grid" id="notifyTable"><thead><tr><th>Event</th><th>User (booker)</th><th>Admin</th><th>Nurse</th></tr></thead><tbody>
+<tr><td class="strong">Signup</td><td>Email OTP plus phone OTP</td><td>-</td><td>-</td></tr>
+<tr><td class="strong">Booking paid</td><td>SMS request received</td><td>Dashboard feed plus SMS plus email</td><td>-</td></tr>
+<tr><td class="strong">Admin confirms</td><td>SMS confirmed, nurse X on date</td><td>-</td><td>SMS plus email with visit details</td></tr>
+<tr><td class="strong">Admin denies</td><td>SMS with reason plus refund status</td><td>Email only if refund failed</td><td>-</td></tr>
+<tr><td class="strong">User or admin cancels</td><td>SMS plus refund note if paid</td><td>Feed</td><td>SMS if already assigned</td></tr>
+<tr><td class="strong">Nurse starts / completes</td><td>SMS</td><td>Feed</td><td>-</td></tr>
+</tbody></table></div>
+<div class="pager"><span>Channels: Brevo for email, MSG91 for SMS with log-only fallback in dev and test, admin_notifications table for feed.</span></div>
+</div>
+</section>
+<section class="anchor" id="api">
+<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">API contract changes</h1><p>For the dashboard team. Select a row to copy its path.</p></div></div>
+<div class="card">
+<div class="searchrow"><input class="search focusable" id="apiSearch" placeholder="Search endpoints..." aria-label="Search endpoints"><span class="badge"><span class="dot d-special"></span>click row to copy</span></div>
+<div class="twrap"><table class="grid" id="apiTable"><thead><tr><th>Method and path</th><th>Who</th><th>Purpose</th></tr></thead><tbody>
+<tr class="clickable" data-path="POST /auth/register"><td><code class="code">POST /auth/register</code></td><td>public</td><td>Creates unverified user, sends both OTPs, returns user_id, email, phone, both flags false, no token.</td></tr>
+<tr class="clickable" data-path="POST /auth/otp/send"><td><code class="code">POST /auth/otp/send</code></td><td>public</td><td>Resend OTP. Channel is email or phone.</td></tr>
+<tr class="clickable" data-path="POST /auth/otp/verify"><td><code class="code">POST /auth/otp/verify</code></td><td>public</td><td>Marks channel verified. Returns flags plus access_token once both are true.</td></tr>
+<tr class="clickable" data-path="POST /auth/login"><td><code class="code">POST /auth/login</code></td><td>public</td><td>403 VERIFICATION_REQUIRED with pending channel if not fully verified.</td></tr>
+<tr class="clickable" data-path="POST /auth/forgot-password"><td><code class="code">POST /auth/forgot-password</code></td><td>public</td><td>Sends email OTP with purpose reset.</td></tr>
+<tr class="clickable" data-path="POST /auth/reset-password-otp"><td><code class="code">POST /auth/reset-password-otp</code></td><td>public</td><td>Sets new password from email, otp_code, new_password.</td></tr>
+<tr class="clickable" data-path="GET /bookings?status=awaiting_admin"><td><code class="code">GET /bookings?status=…</code></td><td>admin</td><td>Filter by status for the confirmation queue.</td></tr>
+<tr class="clickable" data-path="PATCH /bookings/{id}/confirm"><td><code class="code">PATCH /bookings/{id}/confirm</code></td><td>admin</td><td>Only from awaiting_admin, or confirmed to reassign.</td></tr>
+<tr class="clickable" data-path="PATCH /bookings/{id}/deny"><td><code class="code">PATCH /bookings/{id}/deny</code></td><td>admin</td><td>Body has reason. Moves to rejected, refunds, notifies user.</td></tr>
+<tr class="clickable" data-path="POST /bookings/{id}/cancel"><td><code class="code">POST /bookings/{id}/cancel</code></td><td>user</td><td>Own booking, before in_progress. Refund if paid.</td></tr>
+<tr class="clickable" data-path="GET /admin/notifications"><td><code class="code">GET /admin/notifications</code></td><td>admin</td><td>Dashboard feed. Supports unread_only=true.</td></tr>
+<tr class="clickable" data-path="PATCH /admin/notifications/{id}/read"><td><code class="code">PATCH /admin/notifications/…/read</code></td><td>admin</td><td>Mark read, plus POST read-all.</td></tr>
+<tr class="clickable" data-path="PATCH /services/{id}"><td><code class="code">PATCH /services/{id}</code></td><td>admin</td><td>Edit name, description, price, active.</td></tr>
+<tr class="clickable" data-path="GET /services/{id}"><td><code class="code">GET /services/{id}</code></td><td>public</td><td>Single service.</td></tr>
+</tbody></table></div>
+<div class="pager"><span>BookingOut gains amount, patient_contact_phone, rejection_reason, refund_status, decided_at. FamilyMemberOut gains sex, contact_phone. POST /payments/verify now sets awaiting_admin instead of confirmed.</span></div>
+</div>
+</section>
+<section class="anchor" id="data">
+<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">Data model changes</h1><p>Migrations the backend must ship.</p></div></div>
+<div class="card"><div class="twrap"><table class="grid"><thead><tr><th>Table</th><th>Change</th></tr></thead><tbody>
+<tr><td class="strong">users</td><td><code class="code">email_verified</code>, <code class="code">phone_verified</code>. Existing accounts backfilled to true.</td></tr>
+<tr><td class="strong">otps</td><td><code class="code">email</code> becomes <code class="code">target</code>, plus <code class="code">channel</code> (email/phone) and <code class="code">purpose</code> (verify/reset).</td></tr>
+<tr><td class="strong">family_members</td><td><code class="code">sex</code>, <code class="code">contact_phone</code>.</td></tr>
+<tr><td class="strong">bookings</td><td><code class="code">patient_contact_phone</code>, <code class="code">rejection_reason</code>, <code class="code">decided_at</code>. New statuses <code class="code">awaiting_admin</code>, <code class="code">rejected</code>.</td></tr>
+<tr><td class="strong">payments</td><td><code class="code">razorpay_refund_id</code>, <code class="code">refunded_amount</code>, <code class="code">refunded_at</code>. New statuses <code class="code">refunded</code>, <code class="code">refund_failed</code>.</td></tr>
+<tr><td class="strong">admin_notifications</td><td>New table: type, title, message, booking_id, is_read, created_at.</td></tr>
+</tbody></table></div>
+<div class="pager"><span>New settings: MSG91_AUTH_KEY, MSG91_SENDER_ID, MSG91_OTP_TEMPLATE_ID, MSG91_ALERT_TEMPLATE_ID, ADMIN_ALERT_PHONES comma-separated.</span></div>
+</div>
+</section>
+<section class="anchor" id="help">
+<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">Build order and team inputs</h1><p>What ships first, what blocks production.</p></div></div>
+<div class="grid2">
+<div class="card"><div class="card-h"><div><h3 class="card-t">Implementation order</h3><p class="card-d">Backend to docs</p></div><span class="badge muted"><span class="dot d-neutral"></span>4 phases</span></div><div class="card-c"><ol class="timeline">
+<li><b>1. Backend</b><p>Migration, verification gate, OTP channels, lifecycle plus deny and cancel and refund, notifications package with email, SMS, feed, services edit, tests.</p></li>
+<li><b>2. User app</b><p>BLoC migration, Verify Contact screen, forgot-password reset step, myself and family step with new member fields, backend amount on review, new statuses plus cancel in bookings, cleanup of unused models and the stale <code class="code">lib-user/</code> folder.</p></li>
+<li><b>3. Nurse app</b><p>Contact phone plus map on booking detail, cancelled and rejected handling, remove stale <code class="code">lib-operator/</code>.</p></li>
+<li><b>4. Docs</b><p>Update <code class="code">ReadMe-s/README.md</code> and the Postman collection for the dashboard team.</p></li>
+</ol></div></div>
+<div class="card"><div class="card-h"><div><h3 class="card-t">What the team must provide</h3><p class="card-d">Blocking inputs</p></div></div><div class="card-c">
+<ul class="checklist">
+<li><b>MSG91 account:</b> auth key, DLT-approved sender ID, one OTP template and one alert template.</li>
+<li><b>Razorpay:</b> refunds enabled on the account, test mode for verification.</li>
+<li><b>Admin phones:</b> numbers for <code class="code">ADMIN_ALERT_PHONES</code>.</li>
+<li><b>Dashboard team:</b> wire the new endpoints in the API section above.</li>
+</ul>
+<div class="detailbox" style="margin-top:12px"><p class="dl">Success screen copy</p><p class="dv">Payment received. Your booking is waiting for admin confirmation. We will SMS you when it is confirmed.</p></div>
+</div></div>
+</div>
+<p style="font-size:12px;color:var(--fg-muted);text-align:center;margin:24px 0 0">Generated from flow.md v1.0, 2026-09-24. File processflow.html inside DRAPP-SYSTEM. Uses the dashboard token set: Inter 400/500/600, 13px body, 1px borders, 8px cards, dot statuses, instant theme switch. Diagrams are inline SVG drawn with the same tokens.</p>
+</section>
+</main>
+</div>
+</div>
+<script>
+var sidebar=document.getElementById("sidebar"),scrim=document.getElementById("scrim");
+document.getElementById("menuBtn").addEventListener("click",function(){sidebar.style.transform="translateX(0)";scrim.classList.add("show");});
+function closeNav(){if(window.innerWidth<1024){sidebar.style.transform="";}scrim.classList.remove("show");}
+scrim.addEventListener("click",closeNav);
+function syncSidebar(){if(window.innerWidth<1024){sidebar.style.transform="translateX(-100%)";}else{sidebar.style.transform="";scrim.classList.remove("show");}}
+syncSidebar();window.addEventListener("resize",syncSidebar);
+var trigger=document.getElementById("userTrigger"),menu=document.getElementById("userMenu");
+trigger.addEventListener("click",function(e){e.stopPropagation();menu.classList.toggle("open");});
+document.addEventListener("click",function(){menu.classList.remove("open");});
+document.querySelectorAll("[data-theme]").forEach(function(b){b.addEventListener("click",function(){var dark=b.dataset.theme==="dark";document.documentElement.classList.toggle("dark",dark);try{localStorage.setItem("flow-theme",dark?"dark":"light");}catch(e){}menu.classList.remove("open");closeNav();});});
+var steps=Array.prototype.slice.call(document.querySelectorAll(".wstep")),detail=document.getElementById("wizardDetail");
+steps.forEach(function(s){s.addEventListener("click",function(){steps.forEach(function(x){x.classList.remove("sel");});s.classList.add("sel");detail.textContent=s.dataset.t;});});
+var fbtns=Array.prototype.slice.call(document.querySelectorAll("#statusFilters .fbtn")),rows=Array.prototype.slice.call(document.querySelectorAll("#statusTable tbody tr"));
+fbtns.forEach(function(b){b.addEventListener("click",function(){fbtns.forEach(function(x){x.classList.remove("on");});b.classList.add("on");var f=b.dataset.f;rows.forEach(function(r){r.style.display=(f==="all"||(r.dataset.tags||"").indexOf(f)>-1)?"":"none";});});});
+function bindSearch(inputId,tableId){var inp=document.getElementById(inputId);if(!inp)return;inp.addEventListener("input",function(){var q=inp.value.toLowerCase();Array.prototype.forEach.call(document.querySelectorAll("#"+tableId+" tbody tr"),function(r){r.style.display=r.textContent.toLowerCase().indexOf(q)>-1?"":"none";});});}
+bindSearch("apiSearch","apiTable");bindSearch("notifySearch","notifyTable");
+document.querySelectorAll("#apiTable tr.clickable").forEach(function(r){r.addEventListener("click",function(){var t=r.dataset.path;if(navigator.clipboard){navigator.clipboard.writeText(t).catch(function(){});}r.style.background="var(--surface-hover)";setTimeout(function(){r.style.background="";},400);});});
+document.getElementById("copyFlow").addEventListener("click",function(){var t="Service Detail -> Date and Time -> Duration -> Available Nurses -> Patient -> Address -> Review -> Pay -> Success";if(navigator.clipboard){navigator.clipboard.writeText(t).catch(function(){});}});
+var links=Array.prototype.slice.call(document.querySelectorAll(".navitem")),secs=links.map(function(a){return document.querySelector(a.getAttribute("href"));});
+if("IntersectionObserver" in window){var spy=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){a.classList.toggle("active",a.getAttribute("href")==="#"+e.target.id);});}});},{rootMargin:"-30% 0px -60% 0px"});secs.forEach(function(s){if(s)spy.observe(s);});}
+</script>
+</body>
+</html>
