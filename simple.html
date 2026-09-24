@@ -10,68 +10,36 @@
 <link rel="stylesheet" href="theme.css">
 <script src="theme.js"></script>
 <style>
-/* Actor colours: you = accent, CareNest team = warning, nurse = success */
 .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:8px;height:52px;padding:0 16px;border-bottom:1px solid var(--border);background:var(--canvas)}
 .brandlink{display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;border-radius:6px}
 .topbar .spacer{flex:1}
 .linkbtn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--fg);font-size:13px;font-weight:500;text-decoration:none;white-space:nowrap}
 .linkbtn:hover{background:var(--surface-hover)}
-.wrap{max-width:820px;margin:0 auto;padding:40px 16px 72px}
-.hero h1{margin:0;font-size:28px;line-height:36px;letter-spacing:-0.02em;font-weight:600}
-.hero p{margin:8px 0 0;font-size:15px;line-height:24px;color:var(--fg-muted);max-width:36rem}
-h2{margin:48px 0 4px;font-size:17px;line-height:24px;font-weight:600;letter-spacing:-0.01em}
-.sub{margin:0 0 16px;font-size:13px;color:var(--fg-muted)}
-
-/* Who's involved */
-.people{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:8px}
-.person{border:1px solid var(--border);border-radius:10px;background:var(--surface);padding:16px}
-.person .ic{width:36px;height:36px;border-radius:9999px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
-.person b{display:block;font-size:14px;font-weight:600}
-.person span{display:block;margin-top:2px;font-size:13px;color:var(--fg-secondary)}
-.link{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--fg-muted);text-align:center;min-width:72px}
-.link svg{color:var(--fg-subtle)}
-.c-you{background:var(--accent-soft);color:var(--accent-text)}
-.c-team{background:var(--warning-soft);color:var(--warning)}
-.c-nurse{background:var(--success-soft);color:var(--success)}
-@media(max-width:700px){
-  .people{grid-template-columns:1fr}
-  .link{flex-direction:row;justify-content:center;gap:6px;padding:2px 0}
-  .link svg{transform:rotate(90deg)}
-}
-
-/* Journey */
-.journey{list-style:none;margin:0;padding:0;position:relative}
-.step{position:relative;display:grid;grid-template-columns:40px 1fr;gap:16px;padding-bottom:20px}
-.step:last-child{padding-bottom:0}
-.step::before{content:"";position:absolute;left:19px;top:40px;bottom:0;width:2px;background:var(--border)}
-.step:last-child::before{display:none}
-.num{width:40px;height:40px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;border:1px solid transparent}
-.num.c-you{border-color:var(--accent)}.num.c-team{border-color:var(--warning)}.num.c-nurse{border-color:var(--success)}
-.card{border:1px solid var(--border);border-radius:10px;background:var(--surface);padding:14px 16px}
-.card .who{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-muted)}
-.card .who i{width:6px;height:6px;border-radius:9999px}
-.card h3{margin:4px 0 0;font-size:15px;line-height:22px;font-weight:600}
-.card p{margin:4px 0 0;font-size:13px;line-height:20px;color:var(--fg-secondary)}
-.sms{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:3px 10px 3px 8px;border-radius:9999px;background:var(--surface-sunken);font-size:12px;color:var(--fg-secondary)}
-.sms svg{color:var(--fg-muted)}
-.d-you{background:var(--accent)}.d-team{background:var(--warning)}.d-nurse{background:var(--success)}
-
-/* Status strip */
-.statuses{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-.chip{display:inline-flex;align-items:center;gap:6px;border-radius:9999px;background:var(--surface-sunken);border:1px solid var(--border);padding:4px 12px 4px 10px;font-size:13px;color:var(--fg)}
-.chip i{width:7px;height:7px;border-radius:9999px}
-.arrow{color:var(--fg-subtle);font-size:13px}
-@media(max-width:520px){.statuses{flex-direction:column;align-items:flex-start;gap:4px}.arrow{transform:rotate(90deg);margin-left:18px}}
-
-/* If plans change */
-.cases{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-@media(max-width:700px){.cases{grid-template-columns:1fr}}
-.case .ic{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;background:var(--surface-sunken);color:var(--fg-secondary)}
-.case b{display:block;font-size:14px;font-weight:600}
-.case p{margin:4px 0 0}
-.refund{display:inline-block;margin-top:10px;font-size:12px;font-weight:500;color:var(--success)}
-
-.more{margin-top:48px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--border);padding-top:20px;font-size:13px;color:var(--fg-muted)}
+.wrap{max-width:600px;margin:0 auto;padding:32px 16px 64px}
+h1{margin:0;font-size:26px;line-height:34px;letter-spacing:-0.02em;font-weight:600;text-align:center}
+.lede{margin:6px 0 24px;font-size:15px;line-height:24px;color:var(--fg-muted);text-align:center}
+.flow svg{display:block;width:100%;height:auto;font-family:'Inter',system-ui,sans-serif}
+.lane{fill:var(--surface-sunken)}
+.lt{fill:var(--fg);font-size:12px;font-weight:600}
+.ls{fill:var(--fg-muted);font-size:10px}
+.bx{stroke-width:1.25}
+.b-app{fill:var(--accent-soft);stroke:var(--accent)}
+.b-admin{fill:var(--warning-soft);stroke:var(--warning)}
+.b-nurse{fill:var(--success-soft);stroke:var(--success)}
+.bx.bad{fill:var(--danger-soft);stroke:var(--danger);stroke-dasharray:4 3}
+.bx.end{fill:var(--surface);stroke:var(--border-strong)}
+.bt{fill:var(--fg);font-size:12px;font-weight:600}
+.bs{fill:var(--fg-secondary);font-size:10px}
+.ar{fill:none;stroke:var(--fg-subtle);stroke-width:1.25}
+.ar.acc{stroke:var(--accent)}
+.ar.bad{stroke:var(--danger);stroke-dasharray:4 3}
+.al{fill:var(--fg-muted);font-size:10px;stroke:var(--surface-sunken);stroke-width:3px;paint-order:stroke}
+.al.acc{fill:var(--accent-text)}
+.mk{fill:var(--fg-subtle)}.mk-acc{fill:var(--accent)}.mk-bad{fill:var(--danger)}
+.notes{margin:24px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.notes li{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:20px;color:var(--fg-secondary)}
+.notes i{flex-shrink:0;width:7px;height:7px;margin-top:7px;border-radius:9999px}
+.more{margin-top:32px;display:flex;justify-content:center}
 </style>
 </head>
 <body>
@@ -81,52 +49,64 @@ h2{margin:48px 0 4px;font-size:17px;line-height:24px;font-weight:600;letter-spac
 <a class="linkbtn focusable" href="detailed.html">Detailed flow</a>
 <button class="iconbtn themetoggle focusable" type="button" aria-label="Switch to dark mode"><svg class="i-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button>
 </header>
-
 <main class="wrap">
-<div class="hero">
 <h1>How CareNest works</h1>
-<p>From booking a nurse at home to a finished visit, in six steps.</p>
+<p class="lede">Three apps, one booking.</p>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-acc"/></marker>
+<marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-bad"/></marker>
+</defs></svg>
+<div class="flow">
+<svg viewBox="0 0 360 520" role="img" aria-label="How a booking moves between the CareNest app, the admin dashboard and the nurse app">
+<rect class="lane l-app" x="2" y="0" width="116" height="520" rx="10"/>
+<text class="lt" x="60" y="24" text-anchor="middle">CareNest app</text><text class="ls" x="60" y="40" text-anchor="middle">for families</text>
+<rect class="lane l-admin" x="122" y="0" width="116" height="520" rx="10"/>
+<text class="lt" x="180" y="24" text-anchor="middle">Admin dashboard</text><text class="ls" x="180" y="40" text-anchor="middle">for CareNest team</text>
+<rect class="lane l-nurse" x="242" y="0" width="116" height="520" rx="10"/>
+<text class="lt" x="300" y="24" text-anchor="middle">Nurse app</text><text class="ls" x="300" y="40" text-anchor="middle">for nurses</text>
+<path class="ar" d="M60,106.0 V126.0" marker-end="url(#a)"/>
+<path class="ar" d="M60,172.0 V192.0" marker-end="url(#a)"/>
+<path class="ar acc" d="M112.0,216 H126.0" marker-end="url(#aa)"/>
+<path class="ar" d="M180,238.0 V258.0" marker-end="url(#a)"/>
+<path class="ar bad" d="M128.0,282 H114.0" marker-end="url(#ab)"/>
+<path class="ar" d="M180,304.0 V348 H114.0" marker-end="url(#a)"/>
+<text class="al" x="186" y="330" text-anchor="start">SMS</text>
+<path class="ar" d="M232.0,282 H300 V324.0" marker-end="url(#a)"/>
+<text class="al" x="266" y="276" text-anchor="middle">assign</text>
+<path class="ar" d="M300,370.0 V390.0" marker-end="url(#a)"/>
+<path class="ar" d="M300,436.0 V456.0" marker-end="url(#a)"/>
+<path class="ar" d="M248.0,480 H114.0" marker-end="url(#a)"/>
+<text class="al" x="180" y="473" text-anchor="middle">SMS</text>
+<rect class="bx b-app" x="8" y="62" width="104" height="44" rx="8"/>
+<text class="bt" x="60" y="81" text-anchor="middle">Sign up</text><text class="bs" x="60" y="96" text-anchor="middle">email + phone code</text>
+<rect class="bx b-app" x="8" y="128" width="104" height="44" rx="8"/>
+<text class="bt" x="60" y="147" text-anchor="middle">Choose care</text><text class="bs" x="60" y="162" text-anchor="middle">time, nurse, address</text>
+<rect class="bx b-app" x="8" y="194" width="104" height="44" rx="8"/>
+<text class="bt" x="60" y="213" text-anchor="middle">Pay</text><text class="bs" x="60" y="228" text-anchor="middle">Razorpay</text>
+<rect class="bx b-admin" x="128" y="194" width="104" height="44" rx="8"/>
+<text class="bt" x="180" y="213" text-anchor="middle">New booking</text><text class="bs" x="180" y="228" text-anchor="middle">alert to the team</text>
+<rect class="bx b-admin" x="128" y="260" width="104" height="44" rx="8"/>
+<text class="bt" x="180" y="279" text-anchor="middle">Confirm</text><text class="bs" x="180" y="294" text-anchor="middle">keeps or picks nurse</text>
+<rect class="bx b-app bad" x="8" y="260" width="104" height="44" rx="8"/>
+<text class="bt" x="60" y="279" text-anchor="middle">Declined?</text><text class="bs" x="60" y="294" text-anchor="middle">full refund</text>
+<rect class="bx b-app" x="8" y="326" width="104" height="44" rx="8"/>
+<text class="bt" x="60" y="345" text-anchor="middle">Confirmed</text><text class="bs" x="60" y="360" text-anchor="middle">nurse and date</text>
+<rect class="bx b-nurse" x="248" y="326" width="104" height="44" rx="8"/>
+<text class="bt" x="300" y="345" text-anchor="middle">Visit details</text><text class="bs" x="300" y="360" text-anchor="middle">SMS + email</text>
+<rect class="bx b-nurse" x="248" y="392" width="104" height="44" rx="8"/>
+<text class="bt" x="300" y="411" text-anchor="middle">Start visit</text><text class="bs" x="300" y="426" text-anchor="middle">at the address</text>
+<rect class="bx b-nurse" x="248" y="458" width="104" height="44" rx="8"/>
+<text class="bt" x="300" y="477" text-anchor="middle">Complete</text><text class="bs" x="300" y="492" text-anchor="middle">visit done</text>
+<rect class="bx b-app end" x="8" y="458" width="104" height="44" rx="8"/>
+<text class="bt" x="60" y="477" text-anchor="middle">Visit done</text><text class="bs" x="60" y="492" text-anchor="middle">in history</text>
+</svg>
 </div>
-
-<h2>Who's involved</h2>
-<p class="sub">Three people move every booking forward.</p>
-<div class="people">
-<div class="person"><span class="ic c-you"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><b>You</b><span>Book a nurse and pay in the CareNest app.</span></div>
-<div class="link" aria-hidden="true"><span>books and pays</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-<div class="person"><span class="ic c-team"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span><b>CareNest team</b><span>Checks and confirms every paid booking.</span></div>
-<div class="link" aria-hidden="true"><span>confirms and assigns</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-<div class="person"><span class="ic c-nurse"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg></span><b>Nurse</b><span>Gets the visit details, visits, and completes it.</span></div>
-</div>
-
-<h2>One booking, start to finish</h2>
-<p class="sub">You get an SMS at every step that matters.</p>
-<ol class="journey">
-<li class="step"><span class="num c-you">1</span><div class="card"><span class="who"><i class="d-you"></i>You</span><h3>Create your account</h3><p>Sign up with your name, phone and email. We send a code to both. Enter the codes to verify and you're in.</p></div></li>
-<li class="step"><span class="num c-you">2</span><div class="card"><span class="who"><i class="d-you"></i>You</span><h3>Choose your care</h3><p>Pick a service, the date and time, how long you need, a nurse who is free, who the care is for (you or a family member), and the address.</p></div></li>
-<li class="step"><span class="num c-you">3</span><div class="card"><span class="who"><i class="d-you"></i>You</span><h3>Pay securely</h3><p>Check the total and pay through Razorpay.</p><span class="sms"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>SMS: request received</span></div></li>
-<li class="step"><span class="num c-team">4</span><div class="card"><span class="who"><i class="d-team"></i>CareNest team</span><h3>We confirm your booking</h3><p>Our team reviews every paid booking. We confirm your chosen nurse, or assign another free nurse.</p><span class="sms"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>SMS: confirmed, with the nurse and date</span></div></li>
-<li class="step"><span class="num c-nurse">5</span><div class="card"><span class="who"><i class="d-nurse"></i>Nurse</span><h3>The nurse visits</h3><p>The nurse gets the visit details by SMS and email, arrives at your address and starts the visit.</p><span class="sms"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>SMS: visit started</span></div></li>
-<li class="step"><span class="num c-nurse">6</span><div class="card"><span class="who"><i class="d-nurse"></i>Nurse</span><h3>Visit complete</h3><p>The nurse marks the visit as done. It moves to your booking history.</p><span class="sms"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>SMS: visit completed</span></div></li>
-</ol>
-
-<h2>What you'll see in the app</h2>
-<p class="sub">Your booking shows one of these while it's active.</p>
-<div class="statuses">
-<span class="chip"><i style="background:var(--warning)"></i>Waiting for confirmation</span><span class="arrow" aria-hidden="true">→</span>
-<span class="chip"><i style="background:var(--success)"></i>Confirmed</span><span class="arrow" aria-hidden="true">→</span>
-<span class="chip"><i style="background:var(--info)"></i>Visit in progress</span><span class="arrow" aria-hidden="true">→</span>
-<span class="chip"><i style="background:var(--fg-subtle)"></i>Completed</span>
-</div>
-
-<h2>If plans change</h2>
-<p class="sub">You're never charged for a visit that doesn't happen.</p>
-<div class="cases">
-<div class="card case"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg></span><b>We can't confirm it</b><p>You get an SMS with the reason.</p><span class="refund">Full refund</span></div>
-<div class="card case"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span><b>You cancel</b><p>Cancel any time before the nurse starts the visit.</p><span class="refund">Full refund</span></div>
-<div class="card case"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><b>Payment not finished</b><p>Nothing is charged. Your nurse is held for 15 minutes, then released.</p></div>
-</div>
-
-<div class="more"><span>Want every screen, status and system detail?</span><a class="linkbtn focusable" href="detailed.html">Open the detailed flow <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+<ul class="notes">
+<li><i style="background:var(--accent)"></i>Families get an SMS at each step: request received, confirmed, visit started, visit done.</li>
+<li><i style="background:var(--danger)"></i>Cancel any time before the visit starts for a full refund. Unfinished payments are never charged.</li>
+</ul>
+<div class="more"><a class="linkbtn focusable" href="detailed.html">See the detailed flow <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
 </main>
 </body>
 </html>
