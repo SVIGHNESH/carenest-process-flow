@@ -292,7 +292,7 @@ code.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px
 <tr><td class="strong">User app (CareNest)</td><td><code class="code">care_nest/</code></td><td>Flutter, BLoC state management</td></tr>
 <tr><td class="strong">Backend API</td><td><code class="code">DRAPP-BACKEND/</code></td><td>FastAPI, PostgreSQL, Alembic, Razorpay, Brevo, MSG91</td></tr>
 <tr><td class="strong">Nurse app</td><td><code class="code">cn_nurse/</code></td><td>Flutter</td></tr>
-<tr><td class="strong">Admin dashboard</td><td>external project</td><td>Consumes the backend API</td></tr>
+<tr><td class="strong">Admin dashboard</td><td><code class="code">hospital-care-admin/</code></td><td>React 18, Vite, Tailwind 4, shadcn/ui; consumes the backend API</td></tr>
 </tbody></table></div>
 </div></div>
 <div class="card"><div class="card-h"><div><h3 class="card-t">Decisions locked in v1.0</h3><p class="card-d">The four lines that prevent arguments</p></div></div><div class="card-c"><div class="stack">
@@ -314,7 +314,7 @@ code.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px
 <path class="ed" d="M600,220 C670,220 670,288 736,288" marker-end="url(#ah)"/>
 <rect class="nd" x="20" y="30" width="200" height="64" rx="8"/><text class="tl" x="36" y="56">User app (CareNest)</text><text class="ts" x="36" y="75">care_nest/ · Flutter + BLoC</text>
 <rect class="nd" x="20" y="148" width="200" height="64" rx="8"/><text class="tl" x="36" y="174">Nurse app</text><text class="ts" x="36" y="193">cn_nurse/ · Flutter</text>
-<rect class="nd" x="20" y="266" width="200" height="64" rx="8"/><text class="tl" x="36" y="292">Admin dashboard</text><text class="ts" x="36" y="311">external project</text>
+<rect class="nd" x="20" y="266" width="200" height="64" rx="8"/><text class="tl" x="36" y="292">Admin dashboard</text><text class="ts" x="36" y="311">hospital-care-admin/ · React</text>
 <rect class="nd core" x="360" y="104" width="240" height="152" rx="8"/><text class="tl" x="378" y="130">Backend API</text><text class="ts" x="378" y="148">DRAPP-BACKEND/ · FastAPI</text>
 <line class="rule" x1="360" y1="162" x2="600" y2="162"/>
 <text class="tc" x="378" y="186">OTP verification gate</text><text class="tc" x="378" y="208">Booking lifecycle + refunds</text><text class="tc" x="378" y="230">Notifications: email, SMS, feed</text>
@@ -496,7 +496,7 @@ code.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px
 </div><p class="scrollhint">Scroll sideways to see the full diagram.</p></div></div>
 </section>
 <section class="anchor" id="adminflow">
-<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">Admin flow</h1><p>External dashboard, via API.</p></div></div>
+<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">Admin flow</h1><p><code class="code">hospital-care-admin</code>, via the backend API.</p></div></div>
 <div class="card"><div class="card-h"><div><h3 class="card-t">Five admin moves</h3><p class="card-d">Catalogue to decision to oversight</p></div></div><div class="card-c"><ol class="timeline">
 <li><b>1. Create services and nurses</b><p>Services: name, description, price per hour, active. Nurses: name, email, phone, temporary password; nurse must change it on first login.</p></li>
 <li><b>2. Get pinged on payment</b><p>Homepage feed gets <code class="code">Booking #123 needs confirmation</code> from <code class="code">GET /admin/notifications</code>. Every admin phone in <code class="code">ADMIN_ALERT_PHONES</code> gets an SMS. Admin emails receive a summary.</p></li>
@@ -504,6 +504,55 @@ code.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px
 <li><b>4. Manage live bookings</b><p>Cancel with refund, reassign the nurse, add notes. Feed items arrive when a nurse starts or completes a visit or a user cancels.</p></li>
 <li><b>5. Review nurses</b><p>View each nurse leave and worked days.</p></li>
 </ol></div></div>
+<div class="card" style="margin-top:12px"><div class="card-h"><div><h3 class="card-t">Dashboard screens</h3><p class="card-d">What <code class="code">hospital-care-admin</code> does today, route by route</p></div></div><div class="card-c"><div class="dg">
+<svg viewBox="0 0 960 280" role="img" aria-label="Admin dashboard screen map: Login, role gate, Dashboard, then Bookings, Nurses, Services, Profile and Help. Customer accounts see Not authorized. A 401 returns to Login. Forgot password emails a reset link.">
+<path class="ed dash" d="M495,40 C495,4 95,4 95,38" marker-end="url(#ah)"/><text class="el" x="295" y="18" text-anchor="middle">any 401: session expired, token cleared</text>
+<path class="ed" d="M170,68 L218,68" marker-end="url(#ah)"/>
+<path class="ed acc" d="M370,68 L418,68" marker-end="url(#ah-acc)"/><text class="el acc" x="394" y="61" text-anchor="middle">admin</text>
+<path class="ed dash" d="M330,96 C330,135 495,130 495,168" marker-end="url(#ah)"/><text class="el" x="428" y="130">customer account</text>
+<path class="ed" d="M95,96 L95,168" marker-end="url(#ah)"/>
+<path class="ed" d="M170,198 L218,198" marker-end="url(#ah)"/>
+<path class="ed" d="M570,68 C605,68 605,46 638,46" marker-end="url(#ah)"/>
+<path class="ed" d="M570,68 C605,68 605,111 638,111" marker-end="url(#ah)"/>
+<path class="ed" d="M570,68 C605,68 605,176 638,176" marker-end="url(#ah)"/>
+<path class="ed" d="M570,68 C605,68 605,241 638,241" marker-end="url(#ah)"/>
+<rect class="nd" x="20" y="40" width="150" height="56" rx="8"/><text class="tl" x="34" y="64">Login</text><text class="ts" x="34" y="82">email + password</text>
+<rect class="nd s-warning" x="220" y="40" width="150" height="56" rx="8"/><text class="tl" x="234" y="64">Role gate</text><text class="ts" x="234" y="82">signed in + role admin</text>
+<rect class="nd core" x="420" y="40" width="150" height="56" rx="8"/><text class="tl" x="434" y="64">Dashboard</text><text class="ts" x="434" y="82">3 stats, next 5 visits</text>
+<rect class="nd" x="20" y="170" width="150" height="56" rx="8"/><text class="tl" x="34" y="194">Forgot password</text><text class="ts" x="34" y="212">emails a reset link</text>
+<rect class="nd" x="220" y="170" width="150" height="56" rx="8"/><text class="tl" x="234" y="194">Reset password</text><text class="ts" x="234" y="212">?token= from the link</text>
+<rect class="nd ghost" x="420" y="170" width="150" height="56" rx="8"/><text class="tl" x="434" y="194">Not authorized</text><text class="ts" x="434" y="212">same login, wrong role</text>
+<rect class="nd" x="640" y="20" width="300" height="52" rx="8"/><text class="tl" x="654" y="42">Bookings</text><text class="ts" x="654" y="60">list, detail, confirm, status, notes, new booking</text>
+<rect class="nd" x="640" y="85" width="300" height="52" rx="8"/><text class="tl" x="654" y="107">Nurses</text><text class="ts" x="654" y="125">add, edit, activate, their bookings, declared days</text>
+<rect class="nd" x="640" y="150" width="300" height="52" rx="8"/><text class="tl" x="654" y="172">Services</text><text class="ts" x="654" y="190">list and add</text>
+<rect class="nd" x="640" y="215" width="300" height="52" rx="8"/><text class="tl" x="654" y="237">Profile, Help</text><text class="ts" x="654" y="255">edit own name and phone</text>
+</svg></div>
+<p class="scrollhint">Scroll sideways to see the full diagram.</p>
+<p style="margin:12px 0 0;font-size:12px;color:var(--fg-muted)">Admin password reset uses an emailed link (<code class="code">POST /auth/reset-password</code> with a token), not the OTP reset the user app gets in v1.0. Both paths stay.</p>
+</div></div>
+<div class="card" style="margin-top:12px"><div class="card-h"><div><h3 class="card-t">Confirm and assign a nurse</h3><p class="card-d">The admin's main decision, as the Bookings detail dialog runs it</p></div></div><div class="card-c"><div class="dg">
+<svg viewBox="0 0 960 250" role="img" aria-label="Confirm flow: booking detail, slot availability lookup, pick a free nurse, PATCH confirm with nurse_id, confirmed. If the lookup fails, all active nurses are listed. If nobody is free, the nurse is entered by hand. A 409 conflict refreshes the availability list.">
+<path class="ed bad" d="M725,40 C725,4 305,4 305,38" marker-end="url(#ah-bad)"/><text class="el bad" x="515" y="18" text-anchor="middle">409: nurse booked meanwhile, list refreshes</text>
+<path class="ed" d="M170,68 L208,68" marker-end="url(#ah)"/>
+<path class="ed" d="M400,68 L448,68" marker-end="url(#ah)"/>
+<path class="ed" d="M600,68 L648,68" marker-end="url(#ah)"/>
+<path class="ed acc" d="M800,68 L838,68" marker-end="url(#ah-acc)"/>
+<rect class="nd" x="20" y="40" width="150" height="56" rx="8"/><text class="tl" x="34" y="64">Booking detail</text><text class="ts" x="34" y="82">admin opens a row</text>
+<rect class="nd" x="210" y="40" width="190" height="56" rx="8"/><text class="tl" x="224" y="64">Slot availability</text><text class="ts" x="224" y="82">exact slot_start to slot_end</text>
+<rect class="nd" x="450" y="40" width="150" height="56" rx="8"/><text class="tl" x="464" y="64">Pick a nurse</text><text class="ts" x="464" y="82">free for this slot</text>
+<rect class="nd" x="650" y="40" width="150" height="56" rx="8"/><text class="tl" x="664" y="64">Confirm</text><text class="ts" x="664" y="82">sends nurse_id</text>
+<rect class="nd s-success" x="840" y="40" width="100" height="56" rx="8"/><text class="tm" x="854" y="64">confirmed</text><text class="ts" x="854" y="82">SMS + email</text>
+<path class="ed dash" d="M305,96 L305,168" marker-end="url(#ah)"/><text class="el" x="313" y="136">lookup fails</text>
+<path class="ed dash" d="M400,198 C430,198 470,150 490,98" marker-end="url(#ah)"/>
+<path class="ed dash" d="M525,96 L525,168" marker-end="url(#ah)"/><text class="el" x="533" y="136">nobody free</text>
+<path class="ed dash" d="M600,198 C680,198 710,150 715,98" marker-end="url(#ah)"/>
+<rect class="nd" x="210" y="170" width="190" height="56" rx="8"/><text class="tl" x="224" y="194">All active nurses</text><text class="ts" x="224" y="212">fallback list, not slot-checked</text>
+<rect class="nd s-warning" x="450" y="170" width="150" height="56" rx="8"/><text class="tl" x="464" y="194">Enter manually</text><text class="ts" x="464" y="212">name only, no nurse_id</text>
+<text class="ts" x="760" y="170">Without nurse_id the backend's</text><text class="ts" x="760" y="186">overlap check cannot see the</text><text class="ts" x="760" y="202">slot as taken.</text>
+</svg></div>
+<p class="scrollhint">Scroll sideways to see the full diagram.</p>
+<p style="margin:12px 0 0;font-size:12px;color:var(--fg-muted)">Lookup: <code class="code">GET /nurses/availability/{date}?slot_start&amp;slot_end</code>. Without the slot, the backend treats the whole day as the window and hides any nurse with one booking that day.</p>
+</div></div>
 </section>
 <section class="anchor" id="nurses">
 <div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">Nurse app flow</h1><p>cn_nurse in six moves.</p></div></div>
@@ -519,6 +568,30 @@ code.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px
 <li><b>6. Cancelled</b><p>If cancelled after assignment, the nurse gets an SMS and the booking leaves the active list.</p></li>
 </ol></div></div>
 </div>
+<div class="card" style="margin-top:12px"><div class="card-h"><div><h3 class="card-t">Nurse account and schedule</h3><p class="card-d">From the admin creating the account to the nurse's declared days being used</p></div></div><div class="card-c"><div class="dg">
+<svg viewBox="0 0 960 280" role="img" aria-label="Nurse account: admin adds nurse with a temporary password, first login in the nurse app, forced password reset, active. Admin can deactivate or reactivate. The active nurse declares a schedule, used by the user app nurse list, the admin confirm picker and the admin declared days view.">
+<path class="ed" d="M190,46 L238,46" marker-end="url(#ah)"/>
+<path class="ed" d="M390,46 L438,46" marker-end="url(#ah)"/>
+<path class="ed acc" d="M590,46 L638,46" marker-end="url(#ah-acc)"/>
+<path class="ed dash" d="M772,46 L806,46" marker-start="url(#ah)" marker-end="url(#ah)"/>
+<rect class="nd" x="20" y="20" width="170" height="52" rx="8"/><text class="tl" x="34" y="42">Admin adds nurse</text><text class="ts" x="34" y="60">temporary password</text>
+<rect class="nd" x="240" y="20" width="150" height="52" rx="8"/><text class="tl" x="254" y="42">First login</text><text class="ts" x="254" y="60">nurse app</text>
+<rect class="nd s-warning" x="440" y="20" width="150" height="52" rx="8"/><text class="tl" x="454" y="42">Forced reset</text><text class="ts" x="454" y="60">badge until done</text>
+<rect class="nd s-success" x="640" y="20" width="130" height="52" rx="8"/><text class="tl" x="654" y="42">Active</text><text class="ts" x="654" y="60">offered in pickers</text>
+<rect class="nd s-neutral" x="810" y="20" width="130" height="52" rx="8"/><text class="tl" x="824" y="42">Inactive</text><text class="ts" x="824" y="60">hidden from lists</text>
+<path class="ed" d="M705,72 L705,148" marker-end="url(#ah)"/><text class="el" x="713" y="116">nurse declares</text>
+<rect class="nd core" x="640" y="150" width="130" height="52" rx="8"/><text class="tl" x="654" y="172">Schedule</text><text class="ts" x="654" y="190">leave, working hours</text>
+<text class="ts" x="620" y="172" text-anchor="end">A day with no entry</text><text class="ts" x="620" y="188" text-anchor="end">counts as available.</text>
+<path class="ed" d="M770,176 C790,176 790,122 808,122" marker-end="url(#ah)"/>
+<path class="ed" d="M770,176 L808,176" marker-end="url(#ah)"/>
+<path class="ed" d="M770,176 C790,176 790,230 808,230" marker-end="url(#ah)"/>
+<rect class="nd" x="810" y="100" width="130" height="44" rx="8"/><text class="tl" x="824" y="118">User app</text><text class="ts" x="824" y="134">available nurses</text>
+<rect class="nd" x="810" y="154" width="130" height="44" rx="8"/><text class="tl" x="824" y="172">Confirm picker</text><text class="ts" x="824" y="188">admin, per slot</text>
+<rect class="nd" x="810" y="208" width="130" height="44" rx="8"/><text class="tl" x="824" y="226">Declared days</text><text class="ts" x="824" y="242">admin, date range</text>
+</svg></div>
+<p class="scrollhint">Scroll sideways to see the full diagram.</p>
+<p style="margin:12px 0 0;font-size:12px;color:var(--fg-muted)">Dashboard nurse form: full name, email, phone, temporary password (8 or more characters), optional specialization and years of experience.</p>
+</div></div>
 </section>
 <section class="anchor" id="notify">
 <div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">Notification matrix</h1><p>Email via Brevo, SMS via MSG91, feed via admin_notifications. No push.</p></div></div>
@@ -556,6 +629,7 @@ code.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px
 <tr class="clickable" data-path="GET /services/{id}"><td><code class="code">GET /services/{id}</code></td><td>public</td><td>Single service.</td></tr>
 </tbody></table></div>
 <div class="pager"><span>BookingOut gains amount, patient_contact_phone, rejection_reason, refund_status, decided_at. FamilyMemberOut gains sex, contact_phone. POST /payments/verify now sets awaiting_admin instead of confirmed.</span></div>
+<div class="pager" style="border-top:1px solid var(--border)"><span>Already used by the dashboard and unchanged: <code class="code">GET /nurses/availability/{date}</code>, <code class="code">GET /nurses/{id}/availability</code>, <code class="code">POST /bookings/{id}/notes</code>, <code class="code">PATCH /nurses/{id}</code>, <code class="code">POST /auth/reset-password</code>.</span></div>
 </div>
 </section>
 <section class="anchor" id="data">
