@@ -389,7 +389,7 @@ code.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px
 </div>
 </section>
 <section class="anchor" id="booking">
-<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">Booking wizard and lifecycle</h1><p>The wizard holds one draft. Backend amount is the only price truth.</p></div><div class="headeractions"><button class="btn btn-outline focusable" id="copyFlow">Copy flow</button></div></div>
+<div class="pageheader"><div><h1 style="font-size:16px;line-height:24px">Booking wizard and lifecycle</h1><p>The wizard holds one draft. Backend amount is the only price truth.</p></div></div>
 <div class="card"><div class="card-h"><div><h3 class="card-t">Wizard</h3><p class="card-d">Select a step to inspect it</p></div></div><div class="card-c">
 <div class="wizard" id="wizard">
 <button class="wstep sel focusable" data-t="Pick the day (today or tomorrow, as currently limited) and the start time."><span class="wn">Step 01</span><b>Date and Time</b><span>day plus start</span></button>
@@ -613,7 +613,6 @@ fbtns.forEach(function(b){b.addEventListener("click",function(){fbtns.forEach(fu
 function bindSearch(inputId,tableId){var inp=document.getElementById(inputId);if(!inp)return;inp.addEventListener("input",function(){var q=inp.value.toLowerCase();Array.prototype.forEach.call(document.querySelectorAll("#"+tableId+" tbody tr"),function(r){r.style.display=r.textContent.toLowerCase().indexOf(q)>-1?"":"none";});});}
 bindSearch("apiSearch","apiTable");bindSearch("notifySearch","notifyTable");
 document.querySelectorAll("#apiTable tr.clickable").forEach(function(r){r.addEventListener("click",function(){var t=r.dataset.path;if(navigator.clipboard){navigator.clipboard.writeText(t).catch(function(){});}r.style.background="var(--surface-hover)";setTimeout(function(){r.style.background="";},400);});});
-document.getElementById("copyFlow").addEventListener("click",function(){var t="Service Detail -> Date and Time -> Duration -> Available Nurses -> Patient -> Address -> Review -> Pay -> Success";if(navigator.clipboard){navigator.clipboard.writeText(t).catch(function(){});}});
 var links=Array.prototype.slice.call(document.querySelectorAll(".navitem")),secs=links.map(function(a){return document.querySelector(a.getAttribute("href"));});
 if("IntersectionObserver" in window){var spy=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){a.classList.toggle("active",a.getAttribute("href")==="#"+e.target.id);});}});},{rootMargin:"-30% 0px -60% 0px"});secs.forEach(function(s){if(s)spy.observe(s);});}
 </script>
