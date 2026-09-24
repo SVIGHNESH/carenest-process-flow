@@ -1,0 +1,71 @@
+/* Shared theme for the CareNest process flow pages */
+:root{
+  --nh:265; --nc:0.006; --ah:258; --ac:0.185; --al:0.560;
+  --canvas:oklch(0.988 calc(var(--nc)*0.4) var(--nh));
+  --surface:oklch(1 0 var(--nh));
+  --surface-sunken:oklch(0.970 calc(var(--nc)*1.0) var(--nh));
+  --surface-hover:oklch(0.962 calc(var(--nc)*1.2) var(--nh));
+  --border:oklch(0.918 calc(var(--nc)*1.4) var(--nh));
+  --border-strong:oklch(0.846 calc(var(--nc)*1.6) var(--nh));
+  --fg:oklch(0.205 calc(var(--nc)*3.0) var(--nh));
+  --fg-secondary:oklch(0.400 calc(var(--nc)*2.6) var(--nh));
+  --fg-muted:oklch(0.546 calc(var(--nc)*2.2) var(--nh));
+  --fg-subtle:oklch(0.668 calc(var(--nc)*1.8) var(--nh));
+  --accent:oklch(var(--al) var(--ac) var(--ah));
+  --accent-hover:oklch(calc(var(--al) - 0.06) var(--ac) var(--ah));
+  --accent-fg:oklch(1 0 0);
+  --accent-soft:oklch(0.960 calc(var(--ac)*0.22) var(--ah));
+  --accent-text:oklch(calc(var(--al) - 0.06) var(--ac) var(--ah));
+  --ring:oklch(var(--al) var(--ac) var(--ah) / 0.40);
+  --success:oklch(0.545 0.130 152); --success-soft:oklch(0.958 0.032 152);
+  --info:oklch(0.545 0.130 235); --info-soft:oklch(0.958 0.030 235);
+  --warning:oklch(0.590 0.125 72); --warning-soft:oklch(0.960 0.038 72);
+  --special:oklch(0.545 0.150 295); --special-soft:oklch(0.960 0.032 295);
+  --danger:oklch(0.550 0.180 22); --danger-soft:oklch(0.958 0.035 22);
+  --shadow-popover:0 4px 12px oklch(0.2 0.02 var(--nh) / 0.10), 0 1px 2px oklch(0.2 0.02 var(--nh) / 0.06);
+  --shadow-modal:0 16px 48px oklch(0.2 0.02 var(--nh) / 0.16), 0 2px 8px oklch(0.2 0.02 var(--nh) / 0.06);
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+}
+.dark{
+  --canvas:oklch(0.145 calc(var(--nc)*1.0) var(--nh));
+  --surface:oklch(0.180 calc(var(--nc)*1.1) var(--nh));
+  --surface-sunken:oklch(0.212 calc(var(--nc)*1.2) var(--nh));
+  --surface-hover:oklch(0.228 calc(var(--nc)*1.3) var(--nh));
+  --border:oklch(0.262 calc(var(--nc)*1.5) var(--nh));
+  --border-strong:oklch(0.342 calc(var(--nc)*1.6) var(--nh));
+  --fg:oklch(0.968 calc(var(--nc)*0.6) var(--nh));
+  --fg-secondary:oklch(0.800 calc(var(--nc)*1.4) var(--nh));
+  --fg-muted:oklch(0.640 calc(var(--nc)*1.8) var(--nh));
+  --fg-subtle:oklch(0.505 calc(var(--nc)*2.0) var(--nh));
+  --accent:oklch(0.620 var(--ac) var(--ah));
+  --accent-hover:oklch(0.678 var(--ac) var(--ah));
+  --accent-fg:oklch(0.145 0.01 var(--ah));
+  --accent-soft:oklch(0.290 calc(var(--ac)*0.42) var(--ah));
+  --accent-text:oklch(0.760 calc(var(--ac)*0.72) var(--ah));
+  --ring:oklch(0.620 var(--ac) var(--ah) / 0.55);
+  --success:oklch(0.760 0.145 152); --success-soft:oklch(0.290 0.050 152);
+  --info:oklch(0.750 0.115 235); --info-soft:oklch(0.292 0.048 235);
+  --warning:oklch(0.800 0.135 72); --warning-soft:oklch(0.298 0.050 72);
+  --special:oklch(0.760 0.130 295); --special-soft:oklch(0.295 0.055 295);
+  --danger:oklch(0.700 0.170 22); --danger-soft:oklch(0.295 0.065 22);
+  --shadow-popover:0 4px 12px oklch(0 0 0 / 0.45), 0 1px 2px oklch(0 0 0 / 0.30);
+  --shadow-modal:0 16px 48px oklch(0 0 0 / 0.60), 0 2px 8px oklch(0 0 0 / 0.35);
+}
+*{box-sizing:border-box}
+html{color-scheme:light}
+html.dark{color-scheme:dark}
+body{margin:0;background:var(--canvas);color:var(--fg);font-family:'Inter',system-ui,sans-serif;font-size:13px;line-height:20px;-webkit-font-smoothing:antialiased}
+button:not(:disabled){cursor:pointer}
+::selection{background:var(--accent-soft);color:var(--fg)}
+:focus-visible{outline:none}
+.focusable:focus-visible{box-shadow:0 0 0 2px var(--ring)}
+.brandmark{width:20px;height:20px;border-radius:4px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--accent-fg);flex-shrink:0}
+.brandname{font-size:13px;font-weight:600}
+.iconbtn{display:flex;width:32px;height:32px;align-items:center;justify-content:center;border:0;border-radius:6px;background:transparent;color:var(--fg-secondary)}
+.iconbtn:hover{background:var(--surface-hover);color:var(--fg)}
+.themetoggle{position:relative;margin-left:auto}
+.themetoggle svg{position:absolute;transition:transform 300ms var(--ease-out),opacity 200ms var(--ease-out)}
+.themetoggle .i-sun{opacity:0;transform:rotate(-90deg) scale(.6)}
+.dark .themetoggle .i-sun{opacity:1;transform:none}
+.dark .themetoggle .i-moon{opacity:0;transform:rotate(90deg) scale(.6)}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
