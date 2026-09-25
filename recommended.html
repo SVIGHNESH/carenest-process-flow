@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareNest Recommended Changes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<style>
+.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:8px;height:52px;padding:0 16px;border-bottom:1px solid var(--border);background:var(--canvas)}
+.brandlink{display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;border-radius:6px}
+.topbar .spacer{flex:1}
+.linkbtn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--fg);font-size:13px;font-weight:500;text-decoration:none;white-space:nowrap}
+.linkbtn:hover{background:var(--surface-hover)}
+.wrap{max-width:880px;margin:0 auto;padding:32px 16px 64px}
+h1{margin:0;font-size:26px;line-height:34px;letter-spacing:-0.02em;font-weight:600;text-align:center;text-wrap:balance}
+.lede{max-width:560px;margin:6px auto 0;font-size:15px;line-height:24px;color:var(--fg-muted);text-align:center}
+h2{margin:48px 0 4px;font-size:18px;line-height:26px;font-weight:600;letter-spacing:-0.01em;text-align:center;text-wrap:balance}
+.sub{max-width:560px;margin:0 auto 16px;font-size:13px;color:var(--fg-muted);text-align:center}
+h3{margin:0;font-size:14px;line-height:22px;font-weight:600}
+p{margin:0}
+figure{margin:0}
+a{color:var(--accent-text)}
+h2[id]{scroll-margin-top:68px}
+.card{border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+
+/* Flow charts */
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.charts{grid-template-columns:1fr}}
+.chart{margin:0;padding:20px}
+.chart.old{border-style:dashed;border-color:var(--border-strong)}
+.chead{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:9999px;background:var(--surface-sunken);padding:2px 10px 2px 8px;font-size:12px;white-space:nowrap;color:var(--fg-secondary)}
+.dot{width:6px;height:6px;flex-shrink:0;border-radius:9999px}
+.d-danger{background:var(--danger)}.d-success{background:var(--success)}
+.chart svg{display:block;width:100%;height:auto;max-width:420px;margin:0 auto;font-family:'Inter',system-ui,sans-serif}
+figcaption{margin-top:12px;font-size:13px;line-height:20px;color:var(--fg-secondary)}
+.bt{fill:var(--fg);font-size:12px;font-weight:600}
+.bs{fill:var(--fg-secondary);font-size:10px}
+.al{fill:var(--fg-muted);font-size:10px;paint-order:stroke;stroke:var(--surface);stroke-width:4px}
+.bx{fill:var(--surface-sunken);stroke:var(--border-strong);stroke-width:1.25}
+.bx.bad{fill:var(--danger-soft);stroke:var(--danger)}
+.bx.hold{fill:var(--accent-soft);stroke:var(--accent)}
+.bx.ok{fill:var(--success-soft);stroke:var(--success)}
+.bx.warn{fill:var(--warning-soft);stroke:var(--warning)}
+.ar{fill:none;stroke:var(--fg-subtle);stroke-width:1.25}
+.ar.bad{stroke:var(--danger)}
+.ar.ok{stroke:var(--success)}
+.ar.hold{stroke:var(--accent);stroke-dasharray:5 4}
+.mk{fill:var(--fg-subtle)}.mk-bad{fill:var(--danger)}.mk-ok{fill:var(--success)}.mk-hold{fill:var(--accent)}
+.key{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;margin-top:14px;font-size:12px;color:var(--fg-secondary)}
+.key span{display:inline-flex;align-items:center;gap:6px}
+.key i{width:12px;height:12px;border-radius:3px;border:1.25px solid}
+.k-bad{background:var(--danger-soft);border-color:var(--danger)}
+.k-hold{background:var(--accent-soft);border-color:var(--accent)}
+.k-ok{background:var(--success-soft);border-color:var(--success)}
+.k-warn{background:var(--warning-soft);border-color:var(--warning)}
+
+/* Money flow */
+.money{padding:20px 0 16px}
+.money .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 20px}
+.money svg{display:block;width:100%;height:auto;min-width:680px;font-family:'Inter',system-ui,sans-serif}
+.money figcaption{padding:0 20px}
+.party{fill:var(--surface-sunken);stroke:var(--border-strong);stroke-width:1.25}
+.party.pay{fill:var(--accent-soft);stroke:var(--accent)}
+.life{stroke:var(--border-strong);stroke-width:1;stroke-dasharray:3 4}
+.row{font-size:13px;font-weight:600;paint-order:stroke;stroke:var(--surface);stroke-width:6px}
+.row.good{fill:var(--success)}.row.bad{fill:var(--danger)}
+.ml{fill:var(--fg);font-size:11px;paint-order:stroke;stroke:var(--surface);stroke-width:5px}
+.ml.bad{fill:var(--danger)}.ml.muted{fill:var(--fg-secondary)}
+.sep{stroke:var(--border);stroke-width:1}
+.loss{fill:var(--danger);font-size:11px;font-weight:600;paint-order:stroke;stroke:var(--surface);stroke-width:5px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+@media(max-width:720px){.stats{grid-template-columns:1fr}}
+.stat{padding:16px}
+.stat h3{font-size:12px;font-weight:500;color:var(--fg-muted)}
+.stat .v{margin-top:6px;font-size:26px;line-height:32px;letter-spacing:-0.02em;font-weight:600;font-variant-numeric:tabular-nums}
+.stat .v.good{color:var(--success)}.stat .v.bad{color:var(--danger)}
+.stat p{margin-top:4px;font-size:12px;color:var(--fg-muted)}
+.callout{margin-top:12px;border-radius:8px;border:1px solid var(--warning);background:var(--warning-soft);padding:12px 14px;font-size:13px;line-height:20px;color:var(--fg)}
+
+/* Numbered steps (same pattern as the simple overview) */
+.steps{list-style:none;margin:16px 0 0;padding:0;counter-reset:s}
+.steps li{position:relative;counter-increment:s;padding:0 0 14px 36px;font-size:13px;line-height:20px;color:var(--fg-secondary)}
+.steps li:last-child{padding-bottom:0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:-2px;width:24px;height:24px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;background:var(--surface-sunken);color:var(--fg-secondary);border:1px solid var(--border)}
+.steps li::after{content:"";position:absolute;left:12px;top:26px;bottom:2px;width:1px;background:var(--border)}
+.steps li:last-child::after{display:none}
+.steps b{color:var(--fg);font-weight:600}
+.pad{padding:20px}
+
+/* Problems */
+.probs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:720px){.probs{grid-template-columns:1fr}}
+.prob{padding:16px;display:flex;flex-direction:column;gap:6px}
+.prob p{font-size:13px;line-height:20px;color:var(--fg-secondary)}
+.prob .fix{margin-top:auto;padding-top:10px;border-top:1px solid var(--border);color:var(--fg)}
+.prob .fix b{color:var(--success);font-weight:600}
+
+/* Tables */
+.twrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.grid{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}
+.grid thead{background:var(--surface-sunken)}
+.grid thead tr{border-bottom:1px solid var(--border)}
+.grid th{height:32px;padding:0 12px;text-align:left;vertical-align:middle;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:var(--fg-muted)}
+.grid tbody tr{border-bottom:1px solid var(--border)}
+.grid tbody tr:last-child{border-bottom:0}
+.grid td{padding:10px 12px;vertical-align:top;color:var(--fg-secondary)}
+.grid td.strong{color:var(--fg);font-weight:500}
+.grid td.nums{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--fg);font-weight:600}
+.card.twrap{border-radius:12px}
+.note{margin-top:8px;font-size:12px;color:var(--fg-muted);text-align:center}
+
+/* Refund bar */
+.band{display:flex;gap:3px;border-radius:8px;overflow:hidden}
+.seg{min-width:0;padding:10px;display:flex;flex-direction:column;gap:2px}
+.seg b{font-size:18px;line-height:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.seg span{font-size:11px;line-height:15px;color:var(--fg-secondary)}
+.seg.full{background:var(--success-soft)}.seg.full b{color:var(--success)}
+.seg.half{background:var(--warning-soft)}.seg.half b{color:var(--warning)}
+.seg.none{background:var(--danger-soft)}.seg.none b{color:var(--danger)}
+.axis{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--fg-muted)}
+@media(max-width:560px){.band{flex-direction:column}.band .seg{flex:none!important;flex-direction:row;align-items:baseline;gap:12px}.seg b{min-width:48px}.axis{display:none}}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media(max-width:720px){.rules{grid-template-columns:1fr}}
+.rules ul{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13px;line-height:20px;color:var(--fg-secondary)}
+.rules b{color:var(--fg);font-weight:600}
+
+/* Time limits and people */
+.limits{list-style:none;margin:0;padding:0}
+.limits li{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px;color:var(--fg-secondary)}
+.limits li:last-child{border-bottom:0}
+.limits .num{font-weight:600;color:var(--accent-text);font-variant-numeric:tabular-nums}
+.people{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:720px){.people{grid-template-columns:1fr}}
+.person{padding:16px}
+.povhead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.povhead .ic{width:32px;height:32px;border-radius:9999px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.c-app{background:var(--accent-soft);color:var(--accent-text)}
+.c-admin{background:var(--warning-soft);color:var(--warning)}
+.c-nurse{background:var(--success-soft);color:var(--success)}
+.person p{font-size:13px;line-height:20px;color:var(--fg-secondary)}
+.person p b{color:var(--fg);font-weight:600}
+.more{margin-top:40px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.foot{margin-top:24px;text-align:center;font-size:12px;color:var(--fg-subtle)}
+</style>
+</head>
+<body>
+<header class="topbar">
+<a class="brandlink focusable" href="index.html" title="All views"><span class="brandmark"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span><span class="brandname">CareNest</span></a>
+<span class="spacer"></span>
+<a class="linkbtn focusable" href="simple.html">Simple overview</a>
+<button class="iconbtn themetoggle focusable" type="button" aria-label="Switch to dark mode"><svg class="i-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button>
+</header>
+<main class="wrap">
+<h1>Ask the nurse first, then take the money</h1>
+<p class="lede">Right now the plan takes the family's money first, then waits for someone in the office to approve, and only then tells the nurse. We suggest doing it the other way round. Here's why, in plain words.</p>
+
+<h2>One booking, drawn both ways</h2>
+<p class="sub">Follow the arrows from the top. Red boxes are where things go wrong.</p>
+<div class="charts">
+<figure class="card chart old">
+<div class="chead"><h3>Today's plan</h3><span class="badge"><i class="dot d-danger"></i>Pay first, ask later</span></div>
+<svg viewBox="0 0 400 452" role="img" aria-label="Today's plan: the family pays in full, then waits with no time limit for the office to approve. If the office says no, the family gets a refund that takes 5 to 7 days. If yes, the nurse is told by text without being asked.">
+<defs>
+<marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0 0L10 5L0 10z"/></marker>
+<marker id="a1b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-bad" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<line class="ar" x1="130" y1="58" x2="130" y2="76" marker-end="url(#a1)"/>
+<line class="ar" x1="130" y1="126" x2="130" y2="144" marker-end="url(#a1)"/>
+<line class="ar" x1="130" y1="194" x2="130" y2="212" marker-end="url(#a1)"/>
+<line class="ar" x1="130" y1="294" x2="130" y2="322" marker-end="url(#a1)"/>
+<line class="ar" x1="130" y1="372" x2="130" y2="390" marker-end="url(#a1)"/>
+<line class="ar bad" x1="205" y1="254" x2="260" y2="254" marker-end="url(#a1b)"/>
+<text class="al" x="140" y="313">yes</text>
+<text class="al" x="232" y="246" text-anchor="middle">no</text>
+<rect class="bx" x="20" y="10" width="220" height="48" rx="8"/>
+<text class="bt" x="130" y="30" text-anchor="middle">Family books a visit</text>
+<text class="bs" x="130" y="47" text-anchor="middle">and picks a nurse</text>
+<rect class="bx bad" x="20" y="78" width="220" height="48" rx="8"/>
+<text class="bt" x="130" y="98" text-anchor="middle">Family pays in full</text>
+<text class="bs" x="130" y="115" text-anchor="middle">money leaves their account now</text>
+<rect class="bx bad" x="20" y="146" width="220" height="48" rx="8"/>
+<text class="bt" x="130" y="166" text-anchor="middle">Waits for the office</text>
+<text class="bs" x="130" y="183" text-anchor="middle">no time limit, nurse is blocked</text>
+<path class="bx" d="M130 214L205 254L130 294L55 254Z"/>
+<text class="bt" x="130" y="251" text-anchor="middle">Office</text>
+<text class="bt" x="130" y="266" text-anchor="middle">approves?</text>
+<rect class="bx bad" x="262" y="226" width="130" height="56" rx="8"/>
+<text class="bt" x="327" y="247" text-anchor="middle">Refund</text>
+<text class="bs" x="327" y="263" text-anchor="middle">takes 5–7 days,</text>
+<text class="bs" x="327" y="276" text-anchor="middle">bank fee is lost</text>
+<rect class="bx bad" x="20" y="324" width="220" height="48" rx="8"/>
+<text class="bt" x="130" y="344" text-anchor="middle">Nurse gets a text message</text>
+<text class="bs" x="130" y="361" text-anchor="middle">never asked if they can come</text>
+<rect class="bx" x="20" y="392" width="220" height="48" rx="8"/>
+<text class="bt" x="130" y="412" text-anchor="middle">Visit happens</text>
+<text class="bs" x="130" y="429" text-anchor="middle">if the nurse saw the message</text>
+</svg>
+<figcaption>The money is taken before anyone has agreed to the visit, and the nurse is the last to know.</figcaption>
+</figure>
+
+<figure class="card chart">
+<div class="chead"><h3>Better plan</h3><span class="badge"><i class="dot d-success"></i>Ask first, pay after</span></div>
+<svg viewBox="0 0 400 452" role="img" aria-label="Better plan: the family's payment is held, not confirmed. A nurse gets the offer and has 15 minutes to accept. If they say no, the next nurse is asked. When a nurse says yes, the payment is confirmed and the family is told. If no nurse can come, the held payment goes back to the family automatically.">
+<defs>
+<marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0 0L10 5L0 10z"/></marker>
+<marker id="a2g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-ok" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<line class="ar" x1="130" y1="58" x2="130" y2="76" marker-end="url(#a2)"/>
+<line class="ar" x1="130" y1="126" x2="130" y2="144" marker-end="url(#a2)"/>
+<line class="ar" x1="130" y1="194" x2="130" y2="212" marker-end="url(#a2)"/>
+<line class="ar ok" x1="130" y1="294" x2="130" y2="322" marker-end="url(#a2g)"/>
+<line class="ar ok" x1="130" y1="372" x2="130" y2="390" marker-end="url(#a2g)"/>
+<line class="ar" x1="205" y1="254" x2="260" y2="254" marker-end="url(#a2)"/>
+<path class="ar" d="M327 226V170H242" marker-end="url(#a2)"/>
+<line class="ar" x1="327" y1="282" x2="327" y2="320" marker-end="url(#a2)"/>
+<text class="al" x="140" y="313">yes</text>
+<text class="al" x="232" y="246" text-anchor="middle">no</text>
+<text class="al" x="335" y="162">ask again</text>
+<text class="al" x="319" y="305" text-anchor="end">nobody left</text>
+<rect class="bx" x="20" y="10" width="220" height="48" rx="8"/>
+<text class="bt" x="130" y="30" text-anchor="middle">Family books a visit</text>
+<text class="bs" x="130" y="47" text-anchor="middle">can name a nurse they'd like</text>
+<rect class="bx hold" x="20" y="78" width="220" height="48" rx="8"/>
+<text class="bt" x="130" y="98" text-anchor="middle">Payment is held</text>
+<text class="bs" x="130" y="115" text-anchor="middle">not confirmed until a nurse says yes</text>
+<rect class="bx" x="20" y="146" width="220" height="48" rx="8"/>
+<text class="bt" x="130" y="166" text-anchor="middle">A nurse gets the offer</text>
+<text class="bs" x="130" y="183" text-anchor="middle">15 minutes to answer</text>
+<path class="bx" d="M130 214L205 254L130 294L55 254Z"/>
+<text class="bt" x="130" y="251" text-anchor="middle">Nurse</text>
+<text class="bt" x="130" y="266" text-anchor="middle">says yes?</text>
+<rect class="bx" x="262" y="226" width="130" height="56" rx="8"/>
+<text class="bt" x="327" y="247" text-anchor="middle">Next nurse</text>
+<text class="bs" x="327" y="263" text-anchor="middle">office helps if nobody</text>
+<text class="bs" x="327" y="276" text-anchor="middle">says yes in 1 hour</text>
+<rect class="bx warn" x="262" y="322" width="130" height="56" rx="8"/>
+<text class="bt" x="327" y="343" text-anchor="middle">Money goes back</text>
+<text class="bs" x="327" y="359" text-anchor="middle">automatically,</text>
+<text class="bs" x="327" y="372" text-anchor="middle">no fee for CareNest</text>
+<rect class="bx ok" x="20" y="324" width="220" height="48" rx="8"/>
+<text class="bt" x="130" y="344" text-anchor="middle">Payment confirmed, family told</text>
+<text class="bs" x="130" y="361" text-anchor="middle">"Confirmed: Nurse Asha, Fri 10am"</text>
+<rect class="bx" x="20" y="392" width="220" height="48" rx="8"/>
+<text class="bt" x="130" y="412" text-anchor="middle">Visit happens</text>
+<text class="bs" x="130" y="429" text-anchor="middle">nurse enters the family's code</text>
+</svg>
+<figcaption>The payment is confirmed only once a real nurse has said yes. If nobody can come, the held payment goes back to the family by itself and CareNest pays no fee.</figcaption>
+</figure>
+</div>
+<div class="key" aria-hidden="true">
+<span><i class="k-bad"></i>Goes wrong</span>
+<span><i class="k-hold"></i>Payment held</span>
+<span><i class="k-ok"></i>Payment confirmed</span>
+<span><i class="k-warn"></i>Nobody available</span>
+</div>
+
+<h2>Where the family's money goes</h2>
+<p class="sub">Example: a ₹1,000 visit. Razorpay, the payment company, charges 2% + GST on every payment it takes, which is ₹23.60 here.</p>
+<figure class="card money">
+<div class="scroll">
+<svg viewBox="0 0 760 450" role="img" aria-label="Money flow for a 1,000 rupee visit. Better plan, nurse says yes: 1,000 is held, then confirmed when the nurse accepts; CareNest receives 976.40 after the 23.60 fee and pays the nurse after the visit. Better plan, no nurse: 1,000 is held and then returned automatically, with no fee for CareNest. Today's plan, office says no: 1,000 is taken, CareNest receives 976.40, then refunds the full 1,000 over 5 to 7 days and is 23.60 down.">
+<defs>
+<marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0 0L10 5L0 10z"/></marker>
+<marker id="m1g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-ok" d="M0 0L10 5L0 10z"/></marker>
+<marker id="m1b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-bad" d="M0 0L10 5L0 10z"/></marker>
+<marker id="m1h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-hold" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<rect class="party" x="20" y="8" width="130" height="46" rx="8"/>
+<text class="bt" x="85" y="36" text-anchor="middle">Family's bank</text>
+<rect class="party pay" x="230" y="8" width="130" height="46" rx="8"/>
+<text class="bt" x="295" y="28" text-anchor="middle">Payment company</text>
+<text class="bs" x="295" y="44" text-anchor="middle">Razorpay</text>
+<rect class="party" x="440" y="8" width="130" height="46" rx="8"/>
+<text class="bt" x="505" y="28" text-anchor="middle">CareNest</text>
+<text class="bs" x="505" y="44" text-anchor="middle">business account</text>
+<rect class="party" x="630" y="8" width="110" height="46" rx="8"/>
+<text class="bt" x="685" y="36" text-anchor="middle">Nurse</text>
+<line class="life" x1="85" y1="54" x2="85" y2="440"/>
+<line class="life" x1="295" y1="54" x2="295" y2="440"/>
+<line class="life" x1="505" y1="54" x2="505" y2="440"/>
+<line class="life" x1="685" y1="54" x2="685" y2="440"/>
+
+<text class="row good" x="20" y="86">Better plan · a nurse says yes</text>
+<line class="ar hold" x1="85" y1="118" x2="290" y2="118" marker-end="url(#m1h)"/>
+<text class="ml" x="190" y="111" text-anchor="middle">₹1,000 held</text>
+<line class="ar ok" x1="295" y1="148" x2="500" y2="148" marker-end="url(#m1g)"/>
+<text class="ml" x="400" y="141" text-anchor="middle">₹976.40 once nurse says yes</text>
+<text class="ml muted" x="303" y="166">fee ₹23.60 kept</text>
+<line class="ar ok" x1="505" y1="186" x2="680" y2="186" marker-end="url(#m1g)"/>
+<text class="ml" x="595" y="179" text-anchor="middle">nurse's pay, after visit</text>
+<line class="sep" x1="20" y1="208" x2="740" y2="208"/>
+
+<text class="row good" x="20" y="236">Better plan · no nurse can come</text>
+<line class="ar hold" x1="85" y1="268" x2="290" y2="268" marker-end="url(#m1h)"/>
+<text class="ml" x="190" y="261" text-anchor="middle">₹1,000 held</text>
+<line class="ar" x1="290" y1="298" x2="90" y2="298" marker-end="url(#m1)"/>
+<text class="ml" x="190" y="291" text-anchor="middle">returned automatically</text>
+<text class="ml muted" x="303" y="302">no fee for CareNest</text>
+<line class="sep" x1="20" y1="322" x2="740" y2="322"/>
+
+<text class="row bad" x="20" y="350">Today's plan · office says no</text>
+<line class="ar bad" x1="85" y1="376" x2="290" y2="376" marker-end="url(#m1b)"/>
+<text class="ml" x="190" y="369" text-anchor="middle">₹1,000 taken</text>
+<line class="ar bad" x1="295" y1="400" x2="500" y2="400" marker-end="url(#m1b)"/>
+<text class="ml" x="400" y="393" text-anchor="middle">₹976.40 (fee ₹23.60 kept)</text>
+<line class="ar bad" x1="505" y1="426" x2="90" y2="426" marker-end="url(#m1b)"/>
+<text class="ml bad" x="400" y="419" text-anchor="middle">₹1,000 refund, 5–7 days</text>
+<text class="loss" x="685" y="404" text-anchor="middle">CareNest</text>
+<text class="loss" x="685" y="420" text-anchor="middle">₹23.60 down</text>
+</svg>
+</div>
+<figcaption>Dashed blue = payment held, not yet confirmed. Solid = payment confirmed and money moving.</figcaption>
+</figure>
+<div class="stats">
+<div class="card stat"><h3>Visit goes ahead, CareNest receives</h3><p class="v good">₹976.40</p><p>out of ₹1,000, then pays the nurse</p></div>
+<div class="card stat"><h3>No nurse, better plan: CareNest loses</h3><p class="v good">₹0</p><p>no fee, the held payment returns by itself</p></div>
+<div class="card stat"><h3>Office says no, today's plan: CareNest loses</h3><p class="v bad">₹23.60</p><p>on every refused booking</p></div>
+</div>
+<div class="callout"><b>A note on UPI.</b> Most families will pay by UPI. UPI can't reserve money the way a card can: the money leaves the family's account at checkout. If no nurse says yes, Razorpay sends it back automatically, but it can take a few days. So the "finding a nurse" wait should stay short. CareNest can also ask Razorpay whether UPI one-time mandates, which block the money without taking it, are available on its account.</div>
+<ol class="steps">
+<li><b>At checkout</b> the family's ₹1,000 is held, not confirmed. On a card it stays in their account as a reserved amount. With UPI it leaves and comes back by itself if no nurse says yes.</li>
+<li><b>When a nurse says yes</b> the payment is confirmed. Razorpay keeps its fee and sends the rest to CareNest's bank account.</li>
+<li><b>After the visit</b> CareNest pays the nurse their share. CareNest sets the rate and how often nurses are paid, e.g. weekly.</li>
+<li><b>If the family cancels</b> the cancellation rule below decides how much goes back to them and how much goes to the nurse for their time.</li>
+</ol>
+
+<h2>Six problems, and the simple fix for each</h2>
+<p class="sub">Why today's plan hurts families, nurses and CareNest.</p>
+<div class="probs">
+<div class="card prob"><h3>Families pay for visits that may never happen</h3><p>If the office says no, the family waits 5–7 days for a refund, and the payment company keeps its fee (about 2%).</p><p class="fix"><b>Fix:</b> hold the payment at checkout. Confirm it only when a nurse says yes.</p></div>
+<div class="card prob"><h3>Someone must approve every booking, day and night</h3><p>Bookings are for the next day, so a request at 11 pm needs someone awake. While it waits, the nurse can't be booked by anyone else.</p><p class="fix"><b>Fix:</b> the office only steps in when no nurse says yes within an hour.</p></div>
+<div class="card prob"><h3>The nurse is never asked</h3><p>The nurse finds out by text after the family was told "confirmed". If they're sick or miss the text, nobody turns up.</p><p class="fix"><b>Fix:</b> the nurse taps Accept or Decline. Only then is the family told.</p></div>
+<div class="card prob"><h3>The nurse the family picked can be swapped</h3><p>The family chooses a nurse and pays, then the office may send someone else. That feels like a broken promise.</p><p class="fix"><b>Fix:</b> call it a "preferred nurse". If someone else comes, tell the family before they pay.</p></div>
+<div class="card prob"><h3>Multi-day care is charged as nonstop care</h3><p>A 7-day booking is charged as 168 hours with one nurse, around the clock. No nurse can do that.</p><p class="fix"><b>Fix:</b> sell daily shifts, like 8 or 12 hours a day.</p></div>
+<div class="card prob"><h3>A cancel at the last minute costs the nurse</h3><p>Families get a full refund until the visit starts, even if the nurse is already at the door.</p><p class="fix"><b>Fix:</b> a clear cancellation rule shown before paying. <a href="#cancel">See the suggested rule.</a></p></div>
+</div>
+
+<h2>Time limits in the better plan</h2>
+<p class="sub">Nothing waits forever.</p>
+<ul class="card limits">
+<li><span class="num">15 min</span><span>for the family to finish paying, or the booking is dropped</span></li>
+<li><span class="num">15 min</span><span>for each nurse to answer, or the next nurse is asked</span></li>
+<li><span class="num">1 hour</span><span>without a yes, and the office is alerted to help</span></li>
+<li><span class="num">3 hours</span><span>before the visit with no nurse: held payment returned, family told</span></li>
+</ul>
+<p class="note">Suggested numbers. CareNest can change them.</p>
+
+<h2 id="cancel">How much comes back when a family cancels</h2>
+<p class="sub">Bookings are for the next day, so the time windows are short. The later the cancel, the more of the nurse's day is lost, so the less comes back.</p>
+<figure class="card pad" style="margin:0" aria-label="Refund by time of cancelling: 100 percent before a nurse says yes and more than 12 hours before the visit, 50 percent between 12 and 3 hours before, nothing in the last 3 hours or after the visit starts.">
+<div class="band">
+<div class="seg full" style="flex:3"><b>100%</b><span>before a nurse says yes</span></div>
+<div class="seg full" style="flex:3"><b>100%</b><span>more than 12 h before</span></div>
+<div class="seg half" style="flex:3"><b>50%</b><span>3 to 12 h before</span></div>
+<div class="seg none" style="flex:2"><b>0%</b><span>last 3 h</span></div>
+<div class="seg none" style="flex:2"><b>0%</b><span>visit started</span></div>
+</div>
+<div class="axis"><span>Family books</span><span>Visit starts →</span></div>
+<figcaption>Refund to the family, by when they cancel. Not to scale.</figcaption>
+</figure>
+
+<div class="card twrap" style="margin-top:12px">
+<table class="grid">
+<thead><tr><th>Family cancels</th><th>Family gets back</th><th>Nurse gets</th></tr></thead>
+<tbody>
+<tr><td class="strong">Before a nurse says yes</td><td class="nums">100%</td><td>Nothing, no work was promised</td></tr>
+<tr><td class="strong">More than 12 h before the visit</td><td class="nums">100%</td><td>Nothing, enough time to fill the slot</td></tr>
+<tr><td class="strong">3 to 12 h before</td><td class="nums">50%</td><td>A share of the 50% CareNest keeps</td></tr>
+<tr><td class="strong">Under 3 h, or nurse already on the way</td><td class="nums">0%</td><td>A fixed visit fee for the lost time</td></tr>
+<tr><td class="strong">After the visit has started</td><td class="nums">0%</td><td>Paid in full</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="rules">
+<div class="card pad"><h3>When CareNest or the nurse cancels</h3>
+<ul>
+<li><b>Nurse cancels or doesn't turn up:</b> 100% back to the family, plus a credit for their next booking. The nurse gets a mark on their record.</li>
+<li><b>No nurse found:</b> the held payment goes back by itself.</li>
+<li><b>CareNest cancels for any reason:</b> 100% back.</li>
+</ul></div>
+<div class="card pad"><h3>Special cases</h3>
+<ul>
+<li><b>Multi-day care:</b> any future day can be cancelled with 24 h notice for a full refund of that day. The next day follows the table above.</li>
+<li><b>Emergencies</b> (the patient is taken to hospital, or passes away): the office can give a full refund whatever the timing, and writes down why.</li>
+</ul></div>
+</div>
+
+<h2>How the money gets back to the family</h2>
+<p class="sub">Refunds go back to the same card or UPI account the family paid from.</p>
+<div class="card twrap">
+<table class="grid">
+<thead><tr><th>Where the payment is</th><th>What happens</th><th>How long</th></tr></thead>
+<tbody>
+<tr><td class="strong">Held (no nurse yet)</td><td>Never confirmed. Razorpay returns it by itself. No fee for CareNest.</td><td>Card: the hold just disappears. UPI: a few days.</td></tr>
+<tr><td class="strong">Confirmed (nurse said yes)</td><td>The app sends a refund through Razorpay, full or part.</td><td>About 5–7 working days</td></tr>
+<tr><td class="strong">Urgent cases</td><td>Razorpay "Instant Refund", for a small extra fee.</td><td>Usually within minutes</td></tr>
+</tbody>
+</table>
+</div>
+<p class="note">Razorpay keeps its fee on the original payment when money is refunded, so each refund after a nurse said yes costs CareNest that fee.</p>
+<ol class="steps">
+<li><b>Before paying</b> the family sees the cancellation rule on the review screen and ticks a box to agree.</li>
+<li><b>On the cancel screen</b> the app shows the exact amount coming back before the family confirms.</li>
+<li><b>The refund starts by itself.</b> Nobody in the office has to press a button. The family can see its status: started, done, or failed.</li>
+<li><b>If a refund fails,</b> the office is alerted and sorts it out by hand.</li>
+</ol>
+
+<h2>What changes for each person</h2>
+<p class="sub">The same three people as in the simple overview.</p>
+<div class="people">
+<div class="card person"><div class="povhead"><span class="ic c-app"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><h3>Family</h3></div><p>Signs in with one phone code. <b>Never loses money on a visit nobody agreed to.</b> Gets a clear "Confirmed" with the nurse's name.</p></div>
+<div class="card person"><div class="povhead"><span class="ic c-nurse"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span><h3>Nurse</h3></div><p>Gets a notification and <b>chooses to accept or decline.</b> Starts the visit with a code from the family, so the visit is on record.</p></div>
+<div class="card person"><div class="povhead"><span class="ic c-admin"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></span><h3>CareNest team</h3></div><p>Sees every booking live but <b>only acts when something is stuck.</b> Can still assign a nurse by hand at any time.</p></div>
+</div>
+
+<div class="more">
+<a class="linkbtn focusable" href="simple.html">Simple overview</a>
+<a class="linkbtn focusable" href="detailed.html">Detailed flow</a>
+</div>
+<p class="foot">Time limits, refund percentages and the nurse's share are suggestions for CareNest to confirm. · 25 Sep 2026</p>
+</main>
+</body>
+</html>
