@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Better Flow Overview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<style>
+.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:8px;height:52px;padding:0 16px;border-bottom:1px solid var(--border);background:var(--canvas)}
+.brandlink{display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;border-radius:6px}
+.topbar .spacer{flex:1}
+.linkbtn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--fg);font-size:13px;font-weight:500;text-decoration:none;white-space:nowrap}
+.linkbtn:hover{background:var(--surface-hover)}
+.wrap{max-width:600px;margin:0 auto;padding:32px 16px 64px}
+h1{margin:0;font-size:26px;line-height:34px;letter-spacing:-0.02em;font-weight:600;text-align:center}
+.lede{margin:6px 0 24px;font-size:15px;line-height:24px;color:var(--fg-muted);text-align:center}
+.flow svg{display:block;width:100%;height:auto;font-family:'Inter',system-ui,sans-serif}
+.lane{fill:var(--surface-sunken)}
+.lt{fill:var(--fg);font-size:12px;font-weight:600}
+.ls{fill:var(--fg-muted);font-size:10px}
+.bx{stroke-width:1.25}
+.b-app{fill:var(--accent-soft);stroke:var(--accent)}
+.b-admin{fill:var(--warning-soft);stroke:var(--warning)}
+.b-nurse{fill:var(--success-soft);stroke:var(--success)}
+.bx.bad{fill:var(--danger-soft);stroke:var(--danger);stroke-dasharray:4 3}
+.bx.end{fill:var(--surface);stroke:var(--border-strong)}
+.bt{fill:var(--fg);font-size:12px;font-weight:600}
+.bs{fill:var(--fg-secondary);font-size:10px}
+.ar{fill:none;stroke:var(--fg-subtle);stroke-width:1.25}
+.ar.acc{stroke:var(--accent)}
+.ar.dash{stroke-dasharray:3 3}
+.ar.bad{stroke:var(--danger);stroke-dasharray:4 3}
+.al{fill:var(--fg-muted);font-size:10px;stroke:var(--surface-sunken);stroke-width:3px;paint-order:stroke}
+.al.acc{fill:var(--accent-text)}
+.mk{fill:var(--fg-subtle)}.mk-acc{fill:var(--accent)}.mk-bad{fill:var(--danger)}
+.more{margin-top:32px;display:flex;justify-content:center}
+/* Points of view */
+h2{margin:48px 0 4px;font-size:18px;line-height:26px;font-weight:600;letter-spacing:-0.01em;text-align:center}
+.sub{margin:0 0 16px;font-size:13px;color:var(--fg-muted);text-align:center}
+.tabs{display:flex;gap:4px;padding:4px;border:1px solid var(--border);border-radius:10px;background:var(--surface-sunken)}
+.tab{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;height:36px;border:0;border-radius:7px;background:transparent;font:inherit;font-size:13px;font-weight:500;color:var(--fg-secondary);transition:background-color 150ms var(--ease-out),color 150ms var(--ease-out)}
+.tab:hover{color:var(--fg)}
+.tab[aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px oklch(0.2 0.02 var(--nh) / 0.08)}
+.tab i{width:8px;height:8px;border-radius:9999px}
+.tab{white-space:nowrap}.tab .short{display:none}
+@media(max-width:420px){.tab .long{display:none}.tab .short{display:inline}}
+.pov{margin-top:12px;border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:20px}
+.pov[hidden]{display:none}
+.povhead{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.povhead .ic{width:40px;height:40px;border-radius:9999px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.povhead b{display:block;font-size:15px;font-weight:600}
+.povhead span{display:block;font-size:13px;color:var(--fg-muted)}
+.c-app{background:var(--accent-soft);color:var(--accent-text)}
+.c-admin{background:var(--warning-soft);color:var(--warning)}
+.c-nurse{background:var(--success-soft);color:var(--success)}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{position:relative;counter-increment:s;padding:0 0 16px 36px}
+.steps li:last-child{padding-bottom:0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:24px;height:24px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;background:var(--surface-sunken);color:var(--fg-secondary);border:1px solid var(--border)}
+.steps li::after{content:"";position:absolute;left:12px;top:28px;bottom:4px;width:1px;background:var(--border)}
+.steps li:last-child::after{display:none}
+.steps b{display:block;font-size:14px;line-height:24px;font-weight:600}
+.steps p{margin:2px 0 0;font-size:13px;line-height:20px;color:var(--fg-secondary)}
+.told{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.told p{margin:0 0 8px;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:9999px;background:var(--surface-sunken);padding:3px 10px;font-size:12px;color:var(--fg-secondary)}
+.bx.hold{stroke-dasharray:4 3}
+.bx.warn{fill:var(--warning-soft);stroke:var(--warning)}
+.ar.ok{stroke:var(--success)}
+.ar.warn{stroke:var(--warning)}
+.al.ok{fill:var(--success)}
+.mk-ok{fill:var(--success)}.mk-warn{fill:var(--warning)}
+.key{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;margin-top:14px;font-size:12px;color:var(--fg-secondary)}
+.key span{display:inline-flex;align-items:center;gap:6px}
+.key i{width:12px;height:12px;border-radius:3px;border:1.25px solid}
+.k-hold{background:var(--accent-soft);border-color:var(--accent);border-style:dashed!important}
+.k-bad{background:var(--danger-soft);border-color:var(--danger)}
+.k-warn{background:var(--warning-soft);border-color:var(--warning)}
+.new{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 28px;padding:0;list-style:none}
+@media(max-width:520px){.new{grid-template-columns:1fr}}
+.new li{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--border);border-radius:10px;background:var(--surface);padding:12px}
+.new svg{flex-shrink:0;margin-top:2px;color:var(--success)}
+.new b{display:block;font-size:13px;font-weight:600}
+.new span{display:block;font-size:12px;line-height:18px;color:var(--fg-muted)}
+</style>
+</head>
+<body>
+<header class="topbar">
+<a class="brandlink focusable" href="index.html" title="All views"><span class="brandmark"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span><span class="brandname">CareNest</span></a>
+<span class="spacer"></span>
+<a class="linkbtn focusable" href="recommended.html">Full recommendations</a>
+<button class="iconbtn themetoggle focusable" type="button" aria-label="Switch to dark mode"><svg class="i-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button>
+</header>
+<main class="wrap">
+<h1>The better CareNest flow</h1>
+<p class="lede">Ask the nurse first, then take the money.</p>
+<ul class="new"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><div><b>Payment held, not taken</b><span>Confirmed only when a nurse says yes.</span></div></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><div><b>The nurse is asked</b><span>Accept or decline, 15 minutes to answer.</span></div></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><div><b>Office only helps when stuck</b><span>No yes in 1 hour? The team steps in.</span></div></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><div><b>Money back by itself</b><span>No nurse? Held payment returns, no fee.</span></div></li></ul>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-acc"/></marker>
+<marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-bad"/></marker>
+<marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-ok"/></marker>
+<marker id="aw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-warn"/></marker>
+</defs></svg>
+<div class="flow">
+<svg viewBox="0 0 360 582" role="img" aria-label="The better flow: the family pays and the payment is held. A nurse gets the offer and has 15 minutes to accept. If they decline, the office asks the next nurse. If nobody is free 3 hours before the visit, the money goes back automatically. When a nurse accepts, the payment is confirmed and the family is told. The nurse starts the visit with the family's code.">
+<rect class="lane" x="2" y="0" width="116" height="582" rx="10"/>
+<text class="lt" x="60" y="24" text-anchor="middle">CareNest app</text><text class="ls" x="60" y="40" text-anchor="middle">for families</text>
+<rect class="lane" x="122" y="0" width="116" height="582" rx="10"/>
+<text class="lt" x="180" y="24" text-anchor="middle">Admin dashboard</text><text class="ls" x="180" y="40" text-anchor="middle">for CareNest team</text>
+<rect class="lane" x="242" y="0" width="116" height="582" rx="10"/>
+<text class="lt" x="300" y="24" text-anchor="middle">Nurse app</text><text class="ls" x="300" y="40" text-anchor="middle">for nurses</text>
+<path class="ar" d="M232.0,84 H246.0" marker-end="url(#a)"/>
+<path class="ar dash" d="M300,106.0 V150 H114.0" marker-end="url(#a)"/>
+<text class="al" x="180" y="144" text-anchor="middle">free nurses</text>
+<path class="ar" d="M60,106.0 V126.0" marker-end="url(#a)"/>
+<path class="ar" d="M60,172.0 V192.0" marker-end="url(#a)"/>
+<path class="ar acc" d="M112.0,206 H246.0" marker-end="url(#aa)"/>
+<text class="al acc" x="180" y="200" text-anchor="middle">offer</text>
+<path class="ar" d="M300,238.0 V258.0" marker-end="url(#a)"/>
+<path class="ar bad" d="M248.0,282 H234.0" marker-end="url(#ab)"/>
+<path class="ar" d="M180,260.0 V226 H246.0" marker-end="url(#a)"/>
+<text class="al" x="186" y="246" text-anchor="start">ask next</text>
+<path class="ar warn" d="M180,304.0 V324.0" marker-end="url(#aw)"/>
+<path class="ar warn" d="M128.0,348 H114.0" marker-end="url(#aw)"/>
+<path class="ar ok" d="M300,304.0 V390.0" marker-end="url(#ag)"/>
+<text class="al ok" x="306" y="352" text-anchor="start">yes</text>
+<path class="ar ok" d="M248.0,414 H114.0" marker-end="url(#ag)"/>
+<text class="al ok" x="180" y="408" text-anchor="middle">confirmed</text>
+<path class="ar" d="M60,436.0 V456.0" marker-end="url(#a)"/>
+<path class="ar" d="M300,436.0 V456.0" marker-end="url(#a)"/>
+<path class="ar acc" d="M112.0,480 H246.0" marker-end="url(#aa)"/>
+<text class="al acc" x="180" y="474" text-anchor="middle">code</text>
+<path class="ar" d="M300,502.0 V522.0" marker-end="url(#a)"/>
+<path class="ar" d="M248.0,546 H114.0" marker-end="url(#a)"/>
+<text class="al" x="180" y="539" text-anchor="middle">SMS</text>
+<rect class="bx b-app" x="8" y="62" width="104" height="44" rx="8"/><text class="bt" x="60" y="81" text-anchor="middle">Sign in</text><text class="bs" x="60" y="96" text-anchor="middle">one phone code</text>
+<rect class="bx b-admin" x="128" y="62" width="104" height="44" rx="8"/><text class="bt" x="180" y="81" text-anchor="middle">Set up</text><text class="bs" x="180" y="96" text-anchor="middle">services, nurses</text>
+<rect class="bx b-nurse" x="248" y="62" width="104" height="44" rx="8"/><text class="bt" x="300" y="81" text-anchor="middle">Set schedule</text><text class="bs" x="300" y="96" text-anchor="middle">leave, work hours</text>
+<rect class="bx b-app" x="8" y="128" width="104" height="44" rx="8"/><text class="bt" x="60" y="147" text-anchor="middle">Choose care</text><text class="bs" x="60" y="162" text-anchor="middle">preferred nurse</text>
+<rect class="bx b-app hold" x="8" y="194" width="104" height="44" rx="8"/><text class="bt" x="60" y="213" text-anchor="middle">Pay</text><text class="bs" x="60" y="228" text-anchor="middle">payment held</text>
+<rect class="bx b-nurse" x="248" y="194" width="104" height="44" rx="8"/><text class="bt" x="300" y="213" text-anchor="middle">Get offer</text><text class="bs" x="300" y="228" text-anchor="middle">15 min to answer</text>
+<rect class="bx b-nurse" x="248" y="260" width="104" height="44" rx="8"/><text class="bt" x="300" y="279" text-anchor="middle">Accept?</text><text class="bs" x="300" y="294" text-anchor="middle">accept or decline</text>
+<rect class="bx b-admin bad" x="128" y="260" width="104" height="44" rx="8"/><text class="bt" x="180" y="279" text-anchor="middle">Declined</text><text class="bs" x="180" y="294" text-anchor="middle">helps after 1 hour</text>
+<rect class="bx warn" x="128" y="326" width="104" height="44" rx="8"/><text class="bt" x="180" y="345" text-anchor="middle">Nobody free</text><text class="bs" x="180" y="360" text-anchor="middle">3 h before visit</text>
+<rect class="bx warn" x="8" y="326" width="104" height="44" rx="8"/><text class="bt" x="60" y="345" text-anchor="middle">Money back</text><text class="bs" x="60" y="360" text-anchor="middle">automatic, no fee</text>
+<rect class="bx b-nurse" x="248" y="392" width="104" height="44" rx="8"/><text class="bt" x="300" y="411" text-anchor="middle">Visit details</text><text class="bs" x="300" y="426" text-anchor="middle">patient, address</text>
+<rect class="bx b-app" x="8" y="392" width="104" height="44" rx="8"/><text class="bt" x="60" y="411" text-anchor="middle">Confirmed</text><text class="bs" x="60" y="426" text-anchor="middle">payment taken</text>
+<rect class="bx b-app" x="8" y="458" width="104" height="44" rx="8"/><text class="bt" x="60" y="477" text-anchor="middle">Visit code</text><text class="bs" x="60" y="492" text-anchor="middle">shown in the app</text>
+<rect class="bx b-nurse" x="248" y="458" width="104" height="44" rx="8"/><text class="bt" x="300" y="477" text-anchor="middle">Start visit</text><text class="bs" x="300" y="492" text-anchor="middle">enters the code</text>
+<rect class="bx b-nurse" x="248" y="524" width="104" height="44" rx="8"/><text class="bt" x="300" y="543" text-anchor="middle">Complete</text><text class="bs" x="300" y="558" text-anchor="middle">care given</text>
+<rect class="bx b-app end" x="8" y="524" width="104" height="44" rx="8"/><text class="bt" x="60" y="543" text-anchor="middle">Care complete</text><text class="bs" x="60" y="558" text-anchor="middle">in care history</text>
+</svg>
+</div>
+<div class="key" aria-hidden="true"><span><i class="k-hold"></i>Payment held</span><span><i class="k-bad"></i>Nurse said no</span><span><i class="k-warn"></i>Nobody free</span></div>
+<h2>Through each person's eyes</h2>
+<p class="sub">What each person does and what they hear about.</p>
+<div class="tabs" role="tablist" aria-label="Point of view"><button class="tab focusable" role="tab" id="tab-app" aria-controls="pov-app" aria-selected="true" tabindex="0"><i style="background:var(--accent)"></i>Family</button><button class="tab focusable" role="tab" id="tab-admin" aria-controls="pov-admin" aria-selected="false" tabindex="-1"><i style="background:var(--warning)"></i><span class="long">CareNest team</span><span class="short">Team</span></button><button class="tab focusable" role="tab" id="tab-nurse" aria-controls="pov-nurse" aria-selected="false" tabindex="-1"><i style="background:var(--success)"></i>Nurse</button></div>
+<section class="pov" role="tabpanel" id="pov-app" aria-labelledby="tab-app"><div class="povhead"><span class="ic c-app"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><div><b>Family · CareNest app</b><span>Books care for themselves or a family member.</span></div></div><ol class="steps"><li><b>Sign in</b><p>One code sent to your phone.</p></li><li><b>Book a visit</b><p>Pick the service, day and time, and a nurse you'd like. Longer care is sold as daily shifts, like 8 or 12 hours a day.</p></li><li><b>Agree and pay</b><p>See the cancellation rule and tick to agree. Your payment is held, not taken, until a nurse says yes.</p></li><li><b>Wait for a nurse</b><p>Usually minutes. If no nurse can come, the held payment goes back to you by itself.</p></li><li><b>Get confirmed</b><p>An SMS with the nurse's name and the date. Only now is the payment confirmed.</p></li><li><b>On the day</b><p>Give the nurse the visit code from the app so the visit can start.</p></li><li><b>Cancel if you need to</b><p>The app shows the exact amount coming back before you confirm. Full refund before a nurse says yes or more than 12 h before the visit, 50% from 3 to 12 h, nothing in the last 3 h.</p></li></ol><div class="told"><p>Gets told when</p><div class="chips"><span class="chip">Request received</span><span class="chip">Nurse found</span><span class="chip">No nurse, money back</span><span class="chip">Visit started</span><span class="chip">Visit completed</span><span class="chip">Refund status</span></div></div></section>
+<section class="pov" role="tabpanel" id="pov-admin" aria-labelledby="tab-admin" hidden><div class="povhead"><span class="ic c-admin"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span><div><b>CareNest team · Admin dashboard</b><span>Runs the service and steps in when something is stuck.</span></div></div><ol class="steps"><li><b>Set up</b><p>Add services with a price per hour, and add nurses.</p></li><li><b>Watch bookings live</b><p>Every booking shows up as it happens. Nothing needs approving.</p></li><li><b>Step in when stuck</b><p>If no nurse says yes within 1 hour, you're alerted and can assign a nurse by hand.</p></li><li><b>Handle emergencies</b><p>Give a full refund whatever the timing if the patient is taken to hospital, and note why.</p></li><li><b>Fix failed refunds</b><p>Refunds start by themselves. If one fails, you're alerted to sort it out.</p></li></ol><div class="told"><p>Gets told when</p><div class="chips"><span class="chip">No nurse after 1 hour</span><span class="chip">Nurse didn't turn up</span><span class="chip">Booking cancelled</span><span class="chip">Refund failed</span></div></div></section>
+<section class="pov" role="tabpanel" id="pov-nurse" aria-labelledby="tab-nurse" hidden><div class="povhead"><span class="ic c-nurse"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg></span><div><b>Nurse · Nurse app</b><span>Visits the patient at home.</span></div></div><ol class="steps"><li><b>First login</b><p>Use the email and temporary password from the CareNest team, then set your own password.</p></li><li><b>Set your schedule</b><p>Mark leave days and working hours.</p></li><li><b>Get an offer</b><p>A notification with the service, time and area. You have 15 minutes to accept or decline. If you decline, the next nurse is asked.</p></li><li><b>Before the visit</b><p>See the patient's details, condition and the address on a map.</p></li><li><b>Visit</b><p>Enter the family's code to start, and tap Complete when you finish.</p></li><li><b>Get paid</b><p>CareNest pays your share after the visit, for example weekly. A late cancel by the family still pays you a visit fee.</p></li></ol><div class="told"><p>Gets told when</p><div class="chips"><span class="chip">New offer</span><span class="chip">Visit cancelled</span><span class="chip">Payment sent</span></div></div></section>
+<div class="more"><a class="linkbtn focusable" href="recommended.html">See the full recommendations <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</main>
+<script>
+(function(){var tabs=[].slice.call(document.querySelectorAll('.tab'));
+function pick(t,focus){tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;document.getElementById(x.getAttribute('aria-controls')).hidden=!on;});if(focus)t.focus();}
+tabs.forEach(function(t,i){t.addEventListener('click',function(){pick(t)});t.addEventListener('keydown',function(e){var d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(d){e.preventDefault();pick(tabs[(i+d+tabs.length)%tabs.length],true);}});});})();
+</script>
+</body>
+</html>
