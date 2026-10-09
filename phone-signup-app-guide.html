@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phone sign-up: app implementation guide - CareNest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<style>
+html{scroll-behavior:smooth;scroll-padding-top:68px}
+.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:8px;height:52px;padding:0 16px;border-bottom:1px solid var(--border);background:var(--canvas)}
+.brandlink{display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;border-radius:6px}
+.topbar .spacer{flex:1}
+.linkbtn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--fg);font-size:13px;font-weight:500;text-decoration:none;white-space:nowrap}
+.linkbtn:hover{background:var(--surface-hover)}
+.wrap{max-width:780px;margin:0 auto;padding:40px 16px 80px}
+.eyebrow{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:9999px;background:var(--accent-soft);color:var(--accent-text);font-size:12px;font-weight:600}
+h1{margin:12px 0 0;font-size:28px;line-height:36px;letter-spacing:-0.02em;font-weight:600;text-wrap:balance}
+.lede{margin:10px 0 0;font-size:15px;line-height:24px;color:var(--fg-muted)}
+.lede + .lede{margin-top:4px}
+.toc{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:28px 0 0;padding:6px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+.toc a{display:flex;align-items:baseline;gap:10px;padding:8px 10px;border-radius:8px;color:var(--fg-secondary);text-decoration:none;font-size:13px;line-height:18px;transition:background-color 120ms var(--ease-out),color 120ms var(--ease-out)}
+.toc a:hover{background:var(--surface-hover);color:var(--fg)}
+.toc a .nums{flex:none;width:14px;color:var(--fg-subtle);font-size:12px;font-weight:600}
+@media(max-width:700px){.toc{grid-template-columns:1fr 1fr}}
+@media(max-width:440px){.toc{grid-template-columns:1fr}}
+section{margin-top:56px}
+h2{display:flex;align-items:center;gap:12px;margin:0 0 14px;font-size:19px;line-height:28px;font-weight:600;letter-spacing:-0.01em}
+.secnum{flex:none;width:26px;height:26px;border-radius:9999px;background:var(--accent);color:var(--accent-fg);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+h3{margin:30px 0 8px;font-size:15px;line-height:22px;font-weight:600}
+p{margin:0 0 12px;font-size:14px;line-height:23px;color:var(--fg-secondary)}
+b{color:var(--fg);font-weight:600}
+ul,ol{margin:0 0 14px;padding-left:20px}
+li{font-size:14px;line-height:23px;color:var(--fg-secondary);margin-bottom:6px}
+li::marker{color:var(--fg-subtle)}
+ul.checks{list-style:none;padding:4px 16px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+ul.checks li{display:flex;gap:12px;align-items:flex-start;margin:0;padding:10px 0;border-bottom:1px solid var(--border)}
+ul.checks li:last-child{border-bottom:0}
+.box{flex:none;width:16px;height:16px;margin-top:3px;border:1.5px solid var(--border-strong);border-radius:4px;background:var(--canvas)}
+.card{border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+.card.tbl{margin:4px 0 16px;overflow:hidden}
+.twrap{width:100%;overflow-x:auto}
+table.grid{width:100%;border-collapse:collapse;font-size:13px}
+.grid thead{background:var(--surface-sunken)}
+.grid thead tr{border-bottom:1px solid var(--border)}
+.grid th{height:32px;padding:0 12px;text-align:left;vertical-align:middle;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:var(--fg-muted)}
+.grid th .code{text-transform:none;letter-spacing:0}
+.grid tbody tr{border-bottom:1px solid var(--border)}
+.grid tbody tr:last-child{border-bottom:0}
+.grid td{padding:10px 12px;vertical-align:top;line-height:20px;color:var(--fg-secondary);min-width:96px}
+.grid td.strong{color:var(--fg);font-weight:500}
+.grid td .code{white-space:normal;overflow-wrap:anywhere}
+.grid td:first-child .code{white-space:nowrap}
+.nums{font-variant-numeric:tabular-nums;white-space:nowrap}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:9999px;background:var(--surface-sunken);padding:1px 10px 1px 8px;font-size:12px;white-space:nowrap;color:var(--fg)}
+.dot{width:6px;height:6px;flex-shrink:0;border-radius:9999px}
+.d-success{background:var(--success)}.d-warning{background:var(--warning)}.d-danger{background:var(--danger)}
+.method{display:inline-block;padding:1px 7px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;font-weight:600;letter-spacing:.02em}
+.m-post{background:var(--success-soft);color:var(--success)}
+.m-get{background:var(--info-soft);color:var(--info)}
+.m-patch{background:var(--warning-soft);color:var(--warning)}
+code.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:var(--surface-sunken);border:1px solid var(--border);border-radius:4px;padding:1px 5px;color:var(--fg);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.codewrap{position:relative;margin:4px 0 16px;border:1px solid var(--border);border-radius:12px;background:var(--surface-sunken)}
+pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;line-height:21px;color:var(--fg);tab-size:2}
+pre code{font:inherit}
+.c-method{color:var(--success);font-weight:600}
+.c-path{color:var(--accent-text);font-weight:600}
+.c-status{color:var(--fg-muted);font-weight:600}
+.c-dim{color:var(--fg-subtle)}
+.copybtn{position:absolute;top:8px;right:8px;height:26px;padding:0 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--fg-secondary);font:500 12px 'Inter',system-ui,sans-serif;opacity:0;transition:opacity 150ms var(--ease-out),background-color 120ms var(--ease-out)}
+.codewrap:hover .copybtn,.copybtn:focus-visible{opacity:1}
+.copybtn:hover{background:var(--surface-hover);color:var(--fg)}
+@media(hover:none){.copybtn{opacity:1}}
+.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--border);font-size:12px;color:var(--fg-subtle)}
+</style>
+</head>
+<body>
+<header class="topbar">
+<a class="brandlink focusable" href="index.html" title="All views"><span class="brandmark"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span><span class="brandname">CareNest</span></a>
+<span class="spacer"></span>
+<a class="linkbtn focusable" href="detailed.html">Detailed flow</a>
+<button class="iconbtn themetoggle focusable" type="button" aria-label="Switch to dark mode"><svg class="i-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button>
+</header>
+<main class="wrap">
+<span class="eyebrow">For the app developer</span>
+<h1>Phone sign-up: app implementation guide</h1>
+<p class="lede">Written 2026-10-09 for the developer of the CareNest customer app (<code class="code">care_nest/</code>, Flutter).</p><p class="lede">The backend side lives in <code class="code">DRAPP-BACKEND/</code> and is described in section 7 of its <code class="code">README.md</code>.</p>
+<nav class="toc" aria-label="Contents"><a class="focusable" href="#summary"><span class="nums">1</span>Summary</a><a class="focusable" href="#screen-flow"><span class="nums">2</span>Screen flow</a><a class="focusable" href="#api-reference-phone-sign-up-and-login"><span class="nums">3</span>API reference: phone sign-up and login</a><a class="focusable" href="#errors-and-limits"><span class="nums">4</span>Errors and limits</a><a class="focusable" href="#existing-email-accounts"><span class="nums">5</span>Existing email accounts</a><a class="focusable" href="#profile-changes"><span class="nums">6</span>Profile changes</a><a class="focusable" href="#files-to-change-in-care-nest"><span class="nums">7</span>Files to change in care_nest/</a><a class="focusable" href="#testing-against-a-local-backend"><span class="nums">8</span>Testing against a local backend</a><a class="focusable" href="#open-points"><span class="nums">9</span>Open points</a></nav>
+<section id="summary"><h2><span class="secnum">1</span>Summary</h2>
+<p>Customers now sign up and log in with a phone number and a 6-digit SMS code. There is no password and no email step. The backend for this is finished. This guide covers what the app must change to use it.</p>
+<p>What the app has to do:</p>
+<ol><li>Replace the login and register screens with one "Enter your phone number" screen.</li><li>Make the code screen work for a phone number (it is email-only today).</li><li>Add a "What is your name?" screen, shown only for a new number.</li><li>Keep a small "Log in with email" link for existing customers, followed by a one-time "confirm your phone" step.</li><li>Stop assuming every account has an email. <code class="code">User.fromJson</code> crashes today on a phone-only account.</li></ol>
+<p>Nothing changes for the nurse app (<code class="code">cn_nurse/</code>) or the admin dashboard. State management stays on Provider. The BLoC migration in <code class="code">flow.md</code> is a separate piece of work.</p>
+</section>
+<section id="screen-flow"><h2><span class="secnum">2</span>Screen flow</h2>
+<div class="codewrap"><button class="copybtn focusable" type="button">Copy</button><pre><code>Splash <span class="c-dim">--</span>(token saved)<span class="c-dim">--------------------------------------------&gt;</span> Home
+Splash <span class="c-dim">--</span>(no token)<span class="c-dim">--&gt;</span> Phone screen
+
+Phone screen <span class="c-dim">--</span>"Send code"<span class="c-dim">--&gt;</span> Code screen
+Code screen <span class="c-dim">--</span>(known number)<span class="c-dim">--------------------------------------&gt;</span> Home
+Code screen <span class="c-dim">--</span>(new number)<span class="c-dim">--&gt;</span> Name screen <span class="c-dim">--</span>"Continue"<span class="c-dim">------------&gt;</span> Home
+
+Phone screen <span class="c-dim">--</span>"Log in with email"<span class="c-dim">--&gt;</span> Email login screen
+Email login <span class="c-dim">--</span>(phone already verified)<span class="c-dim">----------------------------&gt;</span> Home
+Email login <span class="c-dim">--</span>(phone not verified)<span class="c-dim">--&gt;</span> Confirm phone screen <span class="c-dim">--&gt;</span> Code screen <span class="c-dim">--&gt;</span> Home</code></pre></div>
+<div class="card tbl"><div class="twrap"><table class="grid"><thead><tr><th>Screen</th><th>Shows</th><th>Calls</th></tr></thead><tbody><tr><td class=strong>Phone</td><td>One phone field, "Send code", a small "Log in with email" link</td><td><code class="code">POST /auth/phone/send-otp</code></td></tr><tr><td class=strong>Code</td><td>Six digit boxes, 10-minute countdown, "Resend" after 60 seconds</td><td><code class="code">POST /auth/phone/verify-otp</code>, and <code class="code">send-otp</code> again for resend</td></tr><tr><td class=strong>Name</td><td>One name field, "Continue"</td><td><code class="code">POST /auth/phone/complete-signup</code></td></tr><tr><td class=strong>Email login</td><td>The current email and password form</td><td><code class="code">POST /auth/login</code>, then <code class="code">GET /users/me</code></td></tr><tr><td class=strong>Confirm phone</td><td>One phone field, prefilled when the account has a number</td><td><code class="code">POST /users/me/phone/send-otp</code>, then <code class="code">POST /users/me/phone/verify</code></td></tr></tbody></table></div></div>
+<p>The customer never chooses between "sign up" and "log in". The server decides from the number.</p>
+</section>
+<section id="api-reference-phone-sign-up-and-login"><h2><span class="secnum">3</span>API reference: phone sign-up and login</h2>
+<p>Three public endpoints cover both sign-up and login. All take and return JSON. None needs an <code class="code">Authorization</code> header. The base URL comes from <code class="code">API_BASE_URL</code> in the app's <code class="code">.env</code>, as today.</p>
+<div class="card tbl"><div class="twrap"><table class="grid"><thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead><tbody><tr><td><span class="method m-post">POST</span></td><td><code class="code">/auth/phone/send-otp</code></td><td>Text a 6-digit code to the number</td></tr><tr><td><span class="method m-post">POST</span></td><td><code class="code">/auth/phone/verify-otp</code></td><td>Check the code; log in a known number or return a signup token for a new one</td></tr><tr><td><span class="method m-post">POST</span></td><td><code class="code">/auth/phone/complete-signup</code></td><td>Create the account for a new number and log in</td></tr></tbody></table></div></div>
+<h3 id="3-1-send-the-code">3.1 Send the code</h3>
+<div class="codewrap"><button class="copybtn focusable" type="button">Copy</button><pre><code><span class="c-method">POST</span> <span class="c-path">/auth/phone/send-otp</span>
+{ "phone": "9876543210" }
+
+<span class="c-status">200</span>
+{ "message": "OTP sent successfully", "expires_in_seconds": 600, "resend_in_seconds": 60 }</code></pre></div>
+<p>The server accepts <code class="code">9876543210</code>, <code class="code">+919876543210</code>, <code class="code">919876543210</code>, <code class="code">09876543210</code>, and the same with spaces or dashes. It stores and returns every number as <code class="code">+91XXXXXXXXXX</code>. Only Indian mobile numbers are accepted: 10 digits starting with 6, 7, 8 or 9. The response is the same whether or not the number has an account.</p>
+<h3 id="3-2-verify-the-code">3.2 Verify the code</h3>
+<div class="codewrap"><button class="copybtn focusable" type="button">Copy</button><pre><code><span class="c-method">POST</span> <span class="c-path">/auth/phone/verify-otp</span>
+{ "phone": "9876543210", "otp_code": "123456" }</code></pre></div>
+<p>Known number, the customer is logged in:</p>
+<div class="codewrap"><button class="copybtn focusable" type="button">Copy</button><pre><code><span class="c-status">200</span>
+{ "is_new_user": false, "access_token": "&lt;jwt&gt;", "signup_token": null, "token_type": "bearer" }</code></pre></div>
+<p>New number, ask for a name next:</p>
+<div class="codewrap"><button class="copybtn focusable" type="button">Copy</button><pre><code><span class="c-status">200</span>
+{ "is_new_user": true, "access_token": null, "signup_token": "&lt;ticket&gt;", "token_type": "bearer" }</code></pre></div>
+<p>Branch on <code class="code">is_new_user</code>. Save <code class="code">access_token</code> with <code class="code">ApiService.saveToken</code>, exactly as the email login does today. Keep <code class="code">signup_token</code> in memory only and pass it to the name screen. It is valid for 15 minutes. The server rejects it as an access token, so never save it as one. A code works once.</p>
+<h3 id="3-3-complete-sign-up-new-numbers-only">3.3 Complete sign-up (new numbers only)</h3>
+<div class="codewrap"><button class="copybtn focusable" type="button">Copy</button><pre><code><span class="c-method">POST</span> <span class="c-path">/auth/phone/complete-signup</span>
+{ "signup_token": "&lt;ticket&gt;", "name": "Asha Verma" }
+
+<span class="c-status">201</span>
+{ "access_token": "&lt;jwt&gt;", "token_type": "bearer" }</code></pre></div>
+<p><code class="code">name</code> is trimmed, must not be empty, and is at most 255 characters. Calling this twice with the same ticket is safe: the second call returns a token for the same account. After the token is saved, the session behaves exactly like today's. It is a 24-hour JWT, and the existing Dio interceptor adds the <code class="code">Bearer</code> header.</p>
+</section>
+<section id="errors-and-limits"><h2><span class="secnum">4</span>Errors and limits</h2>
+<p>Every error below except 422 returns <code class="code">{ "detail": "&lt;text&gt;" }</code>. The text is written to be shown to the customer as it is. Branch on the status code, not on the text.</p>
+<div class="card tbl"><div class="twrap"><table class="grid"><thead><tr><th>When</th><th>Status</th><th><code class="code">detail</code></th><th>What the app should do</th></tr></thead><tbody><tr><td class=strong>Number is not an Indian mobile number</td><td><span class="badge nums"><span class="dot d-warning"></span>422</span></td><td>a list, not a string</td><td>Validate on the device first; show "Enter a valid 10-digit mobile number"</td></tr><tr><td class=strong>Second code requested within 60 seconds</td><td><span class="badge nums"><span class="dot d-warning"></span>429</span></td><td><code class="code">Please wait a minute before requesting another code.</code></td><td>Keep Resend disabled; read <code class="code">Retry-After</code> for the seconds left</td></tr><tr><td class=strong>More than 5 codes to one number in 10 minutes</td><td><span class="badge nums"><span class="dot d-warning"></span>429</span></td><td><code class="code">Too many codes requested. Try again in a few minutes.</code></td><td>Show the text; read <code class="code">Retry-After</code></td></tr><tr><td class=strong>More than 20 codes from one network address in 10 minutes</td><td><span class="badge nums"><span class="dot d-warning"></span>429</span></td><td><code class="code">Too many codes requested. Try again in a few minutes.</code></td><td>Same as above</td></tr><tr><td class=strong>SMS provider refused the message</td><td><span class="badge nums"><span class="dot d-danger"></span>502</span></td><td><code class="code">Could not send the code. Please try again.</code></td><td>Show the text; the customer may retry at once</td></tr><tr><td class=strong>Wrong code</td><td><span class="badge nums"><span class="dot d-warning"></span>400</span></td><td><code class="code">Incorrect code.</code></td><td>Clear the boxes, keep the customer on the screen</td></tr><tr><td class=strong>Code older than 10 minutes</td><td><span class="badge nums"><span class="dot d-warning"></span>400</span></td><td><code class="code">This code has expired. Request a new one.</code></td><td>Enable Resend</td></tr><tr><td class=strong>5 wrong tries on one code</td><td><span class="badge nums"><span class="dot d-warning"></span>429</span></td><td><code class="code">Too many wrong attempts. Request a new code.</code></td><td>Disable Verify, enable Resend</td></tr><tr><td class=strong>No unused code for this number</td><td><span class="badge nums"><span class="dot d-warning"></span>400</span></td><td><code class="code">No code was requested. Request a new one.</code></td><td>Enable Resend</td></tr><tr><td class=strong>The account is an admin</td><td><span class="badge nums"><span class="dot d-warning"></span>403</span></td><td><code class="code">This account signs in with email and password.</code></td><td>Show the text</td></tr><tr><td class=strong>Signup token invalid or older than 15 minutes</td><td><span class="badge nums"><span class="dot d-warning"></span>400</span></td><td><code class="code">Signup session expired. Verify your number again.</code></td><td>Go back to the phone screen</td></tr></tbody></table></div></div>
+<p>Two things in the current app code will break on these responses.</p>
+<ul><li><b>422 has a list in <code class="code">detail</code>.</b> <code class="code">AuthService</code> passes <code class="code">e.response?.data?['detail']</code> straight into a <code class="code">String?</code> in <code class="code">AuthProvider</code>. That throws when the value is a list and leaves the spinner running. Check <code class="code">detail is String</code> before using it, and fall back to a fixed message.</li><li><b>There are two different 429s.</b> One means "wait before resending" and comes from <code class="code">send-otp</code>. The other means "this code is locked" and comes from <code class="code">verify-otp</code>. Tell them apart by which call failed.</li></ul>
+<p><code class="code">Retry-After</code> is a response header holding whole seconds. With Dio, read it as <code class="code">e.response?.headers.value('retry-after')</code>.</p>
+<p>For the timers on the code screen, take <code class="code">expires_in_seconds</code> and <code class="code">resend_in_seconds</code> from the <code class="code">send-otp</code> response instead of hardcoding them.</p>
+</section>
+<section id="existing-email-accounts"><h2><span class="secnum">5</span>Existing email accounts</h2>
+<p>Customers who registered with email and password keep logging in that way, then confirm their phone number once. <code class="code">POST /auth/login</code> is unchanged: <code class="code">{ "email", "password" }</code> in, <code class="code">{ "access_token", "token_type" }</code> out.</p>
+<p>A number typed at the old registration was never checked, so the server ignores it for phone login. If such a customer types their number on the phone screen, they are treated as a new number and would create a second, empty account. The "Log in with email" link on the phone screen is how they avoid that, so keep it visible.</p>
+<p>After an email login, call <code class="code">GET /users/me</code>. If <code class="code">phone_verified</code> is <code class="code">false</code>, show the confirm-phone screen, prefilled with <code class="code">phone</code> when it is not null. Both calls below need the <code class="code">Authorization: Bearer</code> header, which the Dio interceptor already adds.</p>
+<div class="codewrap"><button class="copybtn focusable" type="button">Copy</button><pre><code><span class="c-method">POST</span> <span class="c-path">/users/me/phone/send-otp</span>
+{ "phone": "9876543210" }
+
+<span class="c-status">200</span>
+{ "message": "OTP sent successfully", "expires_in_seconds": 600, "resend_in_seconds": 60 }</code></pre></div>
+<div class="codewrap"><button class="copybtn focusable" type="button">Copy</button><pre><code><span class="c-method">POST</span> <span class="c-path">/users/me/phone/verify</span>
+{ "phone": "9876543210", "otp_code": "123456" }
+
+<span class="c-status">200</span>
+&lt;the updated profile, same shape as GET /users/me, with phone_verified true&gt;</code></pre></div>
+<p>The limits and error texts are the same as in section 4, plus one more:</p>
+<div class="card tbl"><div class="twrap"><table class="grid"><thead><tr><th>When</th><th>Status</th><th><code class="code">detail</code></th></tr></thead><tbody><tr><td class=strong>Another account has already verified this number</td><td><span class="badge nums"><span class="dot d-warning"></span>409</span></td><td><code class="code">This number is already used by another account.</code></td></tr></tbody></table></div></div>
+<p>From then on the customer can use the phone screen. The email login keeps working too. A code requested here cannot be used on <code class="code">/auth/phone/verify-otp</code>, and the reverse, so do not mix the two screens' calls.</p>
+<p><code class="code">POST /auth/register</code> still exists so the released app version keeps working. The new app should not call it.</p>
+</section>
+<section id="profile-changes"><h2><span class="secnum">6</span>Profile changes</h2>
+<h3 id="6-1-get-users-me">6.1 <code class="code">GET /users/me</code></h3>
+<div class="codewrap"><button class="copybtn focusable" type="button">Copy</button><pre><code>{
+  "user_id": 1,
+  "name": "Asha Verma",
+  "email": null,
+  "phone": "+919876543210",
+  "email_verified": false,
+  "phone_verified": true,
+  "role": "user",
+  "created_at": "2026-10-09T16:43:10.399556"
+}</code></pre></div>
+<ul><li><code class="code">email</code> can now be <code class="code">null</code>. It is <code class="code">null</code> for every account created with a phone number until the customer adds one.</li><li><code class="code">phone</code> can still be <code class="code">null</code>, for old email accounts that never gave one.</li><li><code class="code">email_verified</code> and <code class="code">phone_verified</code> are new and always present.</li></ul>
+<h3 id="6-2-patch-users-me">6.2 <code class="code">PATCH /users/me</code></h3>
+<p><code class="code">name</code> works as before. <code class="code">phone</code> can only be changed here while <code class="code">phone_verified</code> is <code class="code">false</code>. Once the number is verified, a different <code class="code">phone</code> value is rejected:</p>
+<div class="card tbl"><div class="twrap"><table class="grid"><thead><tr><th>When</th><th>Status</th><th><code class="code">detail</code></th></tr></thead><tbody><tr><td class=strong>Changing a verified number</td><td><span class="badge nums"><span class="dot d-warning"></span>400</span></td><td><code class="code">Your number is verified. Change it by verifying the new number.</code></td></tr><tr><td class=strong>Number is not an Indian mobile number</td><td><span class="badge nums"><span class="dot d-warning"></span>400</span></td><td><code class="code">Enter a valid 10-digit mobile number</code></td></tr></tbody></table></div></div>
+<p>To change a verified number, use the two <code class="code">/users/me/phone/*</code> calls from section 5 with the new number. Sending the same number back unchanged is accepted.</p>
+<h3 id="6-3-adding-an-email">6.3 Adding an email</h3>
+<p>A phone account can add an email, confirmed with a code sent to that address. Both calls need the <code class="code">Bearer</code> header.</p>
+<div class="codewrap"><button class="copybtn focusable" type="button">Copy</button><pre><code><span class="c-method">POST</span> <span class="c-path">/users/me/email/send-otp</span>
+{ "email": "asha@example.com" }
+
+<span class="c-status">200</span>
+{ "message": "OTP sent successfully", "expires_in_seconds": 600, "resend_in_seconds": 60 }</code></pre></div>
+<div class="codewrap"><button class="copybtn focusable" type="button">Copy</button><pre><code><span class="c-method">POST</span> <span class="c-path">/users/me/email/verify</span>
+{ "email": "asha@example.com", "otp_code": "123456" }
+
+<span class="c-status">200</span>
+&lt;the updated profile, with email set and email_verified true&gt;</code></pre></div>
+<div class="card tbl"><div class="twrap"><table class="grid"><thead><tr><th>When</th><th>Status</th><th><code class="code">detail</code></th></tr></thead><tbody><tr><td class=strong>Another account already has this email</td><td><span class="badge nums"><span class="dot d-warning"></span>409</span></td><td><code class="code">This email is already used by another account.</code></td></tr></tbody></table></div></div>
+<p>The other limits and code errors match section 4.</p>
+<h3 id="6-4-bookings">6.4 Bookings</h3>
+<p>Every booking response gains <code class="code">booked_by_phone</code> next to <code class="code">booked_by_email</code>. <code class="code">booked_by_email</code> is <code class="code">null</code> for phone-only customers.</p>
+</section>
+<section id="files-to-change-in-care-nest"><h2><span class="secnum">7</span>Files to change in <code class="code">care_nest/</code></h2>
+<div class="card tbl"><div class="twrap"><table class="grid"><thead><tr><th>File</th><th>What to do</th></tr></thead><tbody><tr><td><code class="code">lib/models/user_model.dart</code></td><td>Make <code class="code">email</code> a <code class="code">String?</code>. Add <code class="code">emailVerified</code> and <code class="code">phoneVerified</code>. Today <code class="code">email: json['email']</code> is typed as non-null <code class="code">String</code>, so a phone-only profile throws in <code class="code">fromJson</code>.</td></tr><tr><td><code class="code">lib/services/auth_service.dart</code></td><td>Add methods for <code class="code">send-otp</code>, <code class="code">verify-otp</code>, <code class="code">complete-signup</code>, and the two <code class="code">/users/me/phone/*</code> calls. <code class="code">sendOTP</code> and <code class="code">verifyOTP</code> post <code class="code">{email}</code> today. Guard <code class="code">detail</code> with <code class="code">is String</code> (section 4).</td></tr><tr><td><code class="code">lib/providers/auth_provider.dart</code></td><td>Add the matching methods. Hold the <code class="code">signup_token</code> between the code screen and the name screen. <code class="code">_error = result['message']</code> must only ever receive a string.</td></tr><tr><td><code class="code">lib/screens/auth/login_screen.dart</code></td><td>Becomes the phone screen, or moves behind the "Log in with email" link. Its "Forgot Password?" link opens the email <code class="code">OTPScreen</code>, which only pops back to login, so decide where that link goes.</td></tr><tr><td><code class="code">lib/screens/auth/otp_screen.dart</code></td><td>Take a phone number, call the phone endpoints, branch on <code class="code">is_new_user</code>. Text such as "Verify Your Email" and "OTP sent to your email" needs changing. <code class="code">late Timer _timer</code> is read in <code class="code">dispose()</code> even when it was never started, which throws if the customer leaves before requesting a code.</td></tr><tr><td><code class="code">lib/screens/auth/register_screen.dart</code></td><td>Replace with the name screen. The email, phone, password and confirm-password fields go away.</td></tr><tr><td><code class="code">lib/screens/splash_screen.dart</code></td><td>Still routes on "token saved or not". Send the no-token case to the phone screen.</td></tr><tr><td><code class="code">lib/main.dart</code>, <code class="code">lib/utils/routes.dart</code></td><td>Register the new screens and routes.</td></tr><tr><td><code class="code">lib/utils/constants.dart</code></td><td><code class="code">AppStrings.otpSent</code> says "OTP sent to your email". Add strings for the new screens.</td></tr><tr><td><code class="code">lib/screens/booking/payment_screen.dart</code></td><td>Line 134 sends <code class="code">'email': user?.email ?? ''</code> to Razorpay. Leave the <code class="code">email</code> key out when there is none; <code class="code">contact</code> already uses the phone.</td></tr><tr><td><code class="code">lib/services/payment_service.dart</code></td><td><code class="code">email</code> is a <code class="code">required String</code> parameter that goes into the Razorpay prefill. Make it optional and omit it when null.</td></tr><tr><td><code class="code">lib/screens/home/home_screen.dart</code></td><td>Line 449 shows <code class="code">user?.email ?? ''</code> under the name, which is a blank line for phone accounts. Show the phone number when there is no email.</td></tr><tr><td><code class="code">lib/screens/profile/edit_profile_screen.dart</code></td><td>The phone field is freely editable and is always sent in the <code class="code">PATCH</code>. For a verified number, make it read-only or route changes through the verify calls (section 6.2). The email field is disabled; add an "Add email" action for accounts without one (section 6.3).</td></tr><tr><td><code class="code">lib/services/user_service.dart</code></td><td>Errors use <code class="code">e.message</code>, which is Dio's generic text. Use <code class="code">e.response?.data?['detail']</code> so the server's message reaches the customer.</td></tr><tr><td><code class="code">test/widget/login_screen_test.dart</code>, <code class="code">test/integration/auth_flow_test.dart</code>, <code class="code">test/unit/providers/auth_provider_test.dart</code></td><td>These describe the email flow and are mostly commented-out placeholders. Rewrite them for the phone flow.</td></tr></tbody></table></div></div>
+<p><code class="code">lib-user/</code> is the old copy of the app. <code class="code">flow.md</code> calls it stale, so leave it alone.</p>
+</section>
+<section id="testing-against-a-local-backend"><h2><span class="secnum">8</span>Testing against a local backend</h2>
+<p>The backend changes are not committed or deployed yet. The app's default <code class="code">API_BASE_URL</code> (<code class="code">https://dr-backend-evhe.onrender.com</code>) does not have the new endpoints until they are. Until then, run the backend locally.</p>
+<ol><li>In <code class="code">DRAPP-BACKEND/</code>, leave <code class="code">MSG91_AUTH_KEY</code> empty in <code class="code">.env</code>. With no key, no SMS is sent and the code is written to the server log instead.</li><li>Start it with <code class="code">.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000</code>. Migrations run on startup.</li><li>Point the app's <code class="code">.env</code> at it. From the Android emulator the host machine is <code class="code">http://10.0.2.2:8000</code>.</li><li>Request a code in the app, then read it from the server log. The line looks like <code class="code">MSG91_AUTH_KEY unset; OTP for +919876543210 is 265152 (not sent)</code>.</li></ol>
+<p>Cases to walk through on a device:</p>
+<ul class="checks"><li><span class="box" aria-hidden="true"></span><span>New number: phone, code, name, Home.</span></li><li><span class="box" aria-hidden="true"></span><span>Same number again: phone, code, straight to Home, same account.</span></li><li><span class="box" aria-hidden="true"></span><span>Wrong code, then the right one.</span></li><li><span class="box" aria-hidden="true"></span><span>Five wrong codes: Verify is refused until a new code is requested.</span></li><li><span class="box" aria-hidden="true"></span><span>Resend inside 60 seconds is refused; after 60 seconds it works.</span></li><li><span class="box" aria-hidden="true"></span><span>A code left for more than 10 minutes is refused as expired.</span></li><li><span class="box" aria-hidden="true"></span><span>A number such as <code class="code">12345</code> never reaches the server.</span></li><li><span class="box" aria-hidden="true"></span><span>Closing the app on the name screen, reopening, and starting again from the phone screen.</span></li><li><span class="box" aria-hidden="true"></span><span>Old account: email login, confirm phone, then log out and log in by phone into the same account.</span></li><li><span class="box" aria-hidden="true"></span><span>Old account confirming a number that a phone account already owns: the 409 text is shown.</span></li><li><span class="box" aria-hidden="true"></span><span>Phone-only account: Home, profile, a full booking and the Razorpay sheet all work with no email.</span></li><li><span class="box" aria-hidden="true"></span><span>Airplane mode on each screen: an error is shown and the button comes back.</span></li></ul>
+</section>
+<section id="open-points"><h2><span class="secnum">9</span>Open points</h2>
+<ul><li><b>Is the confirm-phone step mandatory?</b> The server does not force it. An email account with <code class="code">phone_verified</code> false can use every other endpoint. The plan says the app asks once after login; whether "Skip" is offered is a product decision.</li><li><b>Real SMS is untested.</b> No MSG91 credentials exist yet, so delivery to a real phone has not been tried. SMS autofill on Android depends on the final approved template text.</li><li><b>Forgot password.</b> Phone accounts have no password. For email accounts the server's <code class="code">POST /auth/forgot-password</code> emails a reset link, which the current app does not use.</li><li><b>Lost number.</b> A phone-only customer who loses their number cannot log in unless an admin helps. Encouraging customers to add an email (section 6.3) reduces this.</li><li><b>Google sign-in.</b> <code class="code">POST /auth/google</code> exists on the server and the app does not use it. This update leaves it alone.</li></ul>
+</section>
+<p class="foot">Source: PHONE_SIGNUP_APP_GUIDE.md in the backend repo.</p>
+</main>
+<script>
+document.querySelectorAll(".copybtn").forEach(function(b){b.addEventListener("click",function(){var t=b.parentNode.querySelector("pre").innerText;if(!navigator.clipboard)return;navigator.clipboard.writeText(t).then(function(){b.textContent="Copied";setTimeout(function(){b.textContent="Copy"},1200)}).catch(function(){})})})
+</script>
+</body>
+</html>
